@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 #root {
-  font-family: "Inter Tight";
+  font-family: "Inter Tight", "Inter", "Helvetica", sans-serif;
 }
 main {
   height: 100vh;
