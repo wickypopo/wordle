@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { motion } from "motion/react";
 import { WordData } from "./assets/WordData";
@@ -10,44 +10,6 @@ import Confetti from "react-confetti-boom";
 function App() {
   //
   // Tastatur && Spielfeld Data
-
-  const gamestate = [{ round: 1 }];
-  const letters = [
-    [
-      { key: "q", type: "letter", status: null },
-      { key: "w", type: "letter", status: null },
-      { key: "e", type: "letter", status: null },
-      { key: "r", type: "letter", status: null },
-      { key: "t", type: "letter", status: null },
-      { key: "z", type: "letter", status: null },
-      { key: "u", type: "letter", status: null },
-      { key: "i", type: "letter", status: null },
-      { key: "o", type: "letter", status: null },
-      { key: "p", type: "letter", status: null },
-    ],
-    [
-      { key: "a", type: "letter", status: null },
-      { key: "s", type: "letter", status: null },
-      { key: "d", type: "letter", status: null },
-      { key: "f", type: "letter", status: null },
-      { key: "g", type: "letter", status: null },
-      { key: "h", type: "letter", status: null },
-      { key: "j", type: "letter", status: null },
-      { key: "k", type: "letter", status: null },
-      { key: "l", type: "letter", status: null },
-    ],
-    [
-      { key: "enter", label: "ENTER", type: "action" },
-      { key: "y", type: "letter", status: null },
-      { key: "x", type: "letter", status: null },
-      { key: "c", type: "letter", status: null },
-      { key: "v", type: "letter", status: null },
-      { key: "b", type: "letter", status: null },
-      { key: "n", type: "letter", status: null },
-      { key: "m", type: "letter", status: null },
-      { key: "backspace", label: "⌫", type: "action" },
-    ],
-  ];
 
   const keyboardRowsData = [
     [
@@ -142,7 +104,6 @@ function App() {
 
   const [round, setRound] = useState(1);
 
-  const [lastKey, setLastKey] = useState("");
   const [word, setWord] = useState([]);
 
   // Maps
@@ -159,9 +120,9 @@ function App() {
               <button
                 className={
                   key.key +
-                  " flex justify-center items-center text-white sm:w-20 h-14 bg-zinc-500 rounded-md px-4"
+                  " flex justify-center items-center text-white sm:w-20 h-14 bg-zinc-500 rounded-md px-2"
                 }
-                onClick={() => handleKeyboardDelete(lastKey)}
+                onClick={() => handleKeyboardDelete()}
                 key={nanoid()}
               >
                 <Delete size="24" />
@@ -172,7 +133,7 @@ function App() {
               <button
                 className={
                   key.key +
-                  " text-white sm:w-20 h-14 bg-zinc-500 rounded-md font-bold text-xs sm:text-[16px] px-4"
+                  " text-white sm:w-20 h-14 bg-zinc-500 rounded-md font-bold text-xs sm:text-[16px] px-2"
                 }
                 onClick={() => handleKeyboardSubmit(key.key)}
                 key={nanoid()}
@@ -253,7 +214,7 @@ function App() {
     setCurrentCellIndex((prev) => prev + 1);
   }
 
-  function handleKeyboardDelete(key) {
+  function handleKeyboardDelete() {
     if (currentCellIndex === 0) {
       return toast.error("Nothing to delete");
     }
@@ -285,84 +246,98 @@ function App() {
   }
 
   function handleKeyboardSubmit() {
-    const jointWord = word.join("");
-    // wort existiert
+    const jointWord = word.join("").toLowerCase();
+
     if (!WordData.allowedGuesses.includes(jointWord)) {
       return toast.error("Not in Word List");
     }
 
-    // Buchstabe existiert
+    const used = [false, false, false, false, false];
+
+    const currentRowIndex = round - 1;
 
     const newRows = rows.map((row, rowIndex) => {
-      return row.map((cell, cellIndex) => {
-        const cellLetter = cell.letter?.toLowerCase();
-        if (!cellLetter) {
-          return cell;
-        }
+      if (rowIndex !== currentRowIndex) {
+        return row;
+      }
 
-        let status = null;
+      const newRow = row.map((cell) => ({
+        ...cell,
+        status: null,
+      }));
+
+      // 1. Durchgang: correct markieren
+      newRow.forEach((cell, cellIndex) => {
+        const cellLetter = cell.letter?.toLowerCase();
 
         if (randomWord[cellIndex] === cellLetter) {
-          status = "correct";
-        } else if (randomWord.includes(cellLetter)) {
-          status = "exist";
-        } else {
-          status = "false";
+          cell.status = "correct";
+          used[cellIndex] = true;
         }
-        return {
-          ...cell,
-          status: status,
-        };
       });
+
+      // 2. Durchgang: exist / false markieren
+      newRow.forEach((cell) => {
+        const cellLetter = cell.letter?.toLowerCase();
+
+        if (!cellLetter) return;
+
+        if (cell.status === "correct") return;
+
+        const foundIndex = randomWord.split("").findIndex((letter, index) => {
+          return letter === cellLetter && used[index] === false;
+        });
+
+        if (foundIndex !== -1) {
+          cell.status = "exist";
+          used[foundIndex] = true;
+        } else {
+          cell.status = "false";
+        }
+      });
+
+      return newRow;
     });
 
     setRows(newRows);
 
-    setKeyboardRows((prevRows) => {
-      return prevRows.map((row, rowIndex) =>
-        row.map((key, keyIndex) => {
-          // wenn letter aus rows key.key matched und die klasse false oder exist besitzt, übertrage diesen status auf key.status
-          //
-          //
-
-          const matchingCell = newRows
+    setKeyboardRows((prevRows) =>
+      prevRows.map((row) =>
+        row.map((key) => {
+          const matchingCells = newRows
             .flat()
-            .find((cell) => cell?.letter?.toLowerCase() === key.key);
-          if (!matchingCell?.status) {
-            return key;
-          } else if (matchingCell?.status === "active") {
-            return key;
-          } else if (matchingCell?.status === "correct") {
-            return {
-              ...key,
-              status: "key-correct",
-            };
-          } else if (matchingCell?.status === "exist") {
-            return {
-              ...key,
-              status: "key-exist",
-            };
-          } else if (matchingCell?.status === "false") {
-            return {
-              ...key,
-              status: "key-false",
-            };
+            .filter((cell) => cell?.letter?.toLowerCase() === key.key);
+
+          if (matchingCells.some((cell) => cell.status === "correct")) {
+            return { ...key, status: "key-correct" };
           }
+
+          if (matchingCells.some((cell) => cell.status === "exist")) {
+            return { ...key, status: "key-exist" };
+          }
+
+          if (matchingCells.some((cell) => cell.status === "false")) {
+            return { ...key, status: "key-false" };
+          }
+
+          return key;
         }),
-      );
-    });
+      ),
+    );
 
     setWord([]);
-    setRound((prev) => prev + 1);
-    // Gewinnlogik
+
     if (randomWord === jointWord) {
       setWin(true);
       return;
     }
+
     if (round === 6 && randomWord !== jointWord) {
       setLoss(true);
       return;
     }
+
+    setRound((prev) => prev + 1);
   }
 
   function startNewGame() {
@@ -421,16 +396,7 @@ function App() {
           Start new game
         </button>
       ) : null}
-      {/* 
-      <button
-        onClick={() => {
-          getWords(setRandomWord);
-        }}
-      >
-        Aktualisieren
-      </button>
-      <p className="text-white">{randomWord ? randomWord : "Loading..."}</p>
-      */}
+      <p className="text-white">{randomWord}</p>
     </main>
   );
 }
