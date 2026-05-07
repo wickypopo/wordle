@@ -166,7 +166,7 @@ function App() {
         <div
           className={
             cell.status +
-            " flex justify-center items-center text-white text-xl font-bold w-[16vw] sm:w-14 h-[16vw] sm:h-14 border-2 border-zinc-800 rounded-md"
+            " flex justify-center items-center text-white text-xl font-bold w-[14vw] sm:w-14 h-[14vw] sm:h-14 border-2 border-zinc-800 rounded-md"
           }
           key={cell.id}
           id={cell.id}
@@ -368,7 +368,7 @@ function App() {
   }, []);
 
   return (
-    <main className="flex flex-col min-w-screen min-h-screen justify-center items-center gap-4 sm:gap-10 bg-zinc-950">
+    <main className="flex flex-col min-w-screen min-h-screen justify-center items-center gap-8 sm:gap-10 bg-zinc-950">
       <Toaster position="top-center" reverseOrder={false} />
       {/* ================================= */}
       {win || loss ? null : (
