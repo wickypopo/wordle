@@ -166,7 +166,7 @@ function App() {
         <div
           className={
             cell.status +
-            " flex justify-center items-center text-white text-xl font-bold w-10 sm:w-14 h-10 sm:h-14 border-2 border-zinc-800 rounded-md"
+            " flex justify-center items-center text-white text-xl font-bold w-[16vw] sm:w-14 h-[16vw] sm:h-14 border-2 border-zinc-800 rounded-md"
           }
           key={cell.id}
           id={cell.id}
