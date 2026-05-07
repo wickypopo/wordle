@@ -396,7 +396,6 @@ function App() {
           Start new game
         </button>
       ) : null}
-      <p className="text-white">{randomWord}</p>
     </main>
   );
 }
