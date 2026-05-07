@@ -200,7 +200,7 @@ function App() {
   });
 
   const playingBoard = rows.map((row) => (
-    <div className="cell-row" key={nanoid()}>
+    <div className="flex gap-2" key={nanoid()}>
       {row.map((cell) => (
         <div
           className={
@@ -393,7 +393,7 @@ function App() {
   }, []);
 
   return (
-    <main className="bg-zinc-950">
+    <main className="flex flex-col min-w-screen min-h-screen justify-center items-center gap-4 sm:gap-10 bg-zinc-950">
       <Toaster position="top-center" reverseOrder={false} />
       {/* ================================= */}
       {win || loss ? null : (
@@ -411,7 +411,7 @@ function App() {
         </h1>
       ) : null}
       {/* ================================= */}
-      <div className="cells">{playingBoard}</div>
+      <div className="flex flex-col gap-2">{playingBoard}</div>
       <div className="flex flex-col gap-2">{keyboard}</div>
       {win || loss ? (
         <button

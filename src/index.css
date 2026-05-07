@@ -3,34 +3,6 @@
 #root {
   font-family: "Inter Tight", "Inter", "Helvetica", sans-serif;
 }
-main {
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 50px;
-}
-/* CELLS */
-.cells {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-}
-
-.cell-row {
-  display: flex;
-  justify-content: center;
-  gap: 7px;
-}
-
-/* KEYBOARD */
-
-.keyboard {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-}
 
 /* UTILITY */
 
