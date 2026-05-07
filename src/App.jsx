@@ -159,12 +159,12 @@ function App() {
               <button
                 className={
                   key.key +
-                  " flex justify-center items-center text-white sm:w-20 h-14 bg-zinc-500 rounded-md px-2"
+                  " flex justify-center items-center text-white sm:w-20 h-14 bg-zinc-500 rounded-md px-4"
                 }
                 onClick={() => handleKeyboardDelete(lastKey)}
                 key={nanoid()}
               >
-                <Delete />
+                <Delete size="24" />
               </button>
             );
           } else if (key.key === "enter") {
@@ -172,12 +172,12 @@ function App() {
               <button
                 className={
                   key.key +
-                  " text-white sm:w-20 h-14 bg-zinc-500 rounded-md font-bold text-xs sm:text-[16px] px-2"
+                  " text-white sm:w-20 h-14 bg-zinc-500 rounded-md font-bold text-xs sm:text-[16px] px-4"
                 }
                 onClick={() => handleKeyboardSubmit(key.key)}
                 key={nanoid()}
               >
-                {key.key}
+                <span className="tracking-widest">{key.key}</span>
               </button>
             );
           } else {
@@ -205,7 +205,7 @@ function App() {
         <div
           className={
             cell.status +
-            " flex justify-center items-center text-white text-xl font-bold w-14 h-14 border-2 border-zinc-800 rounded-md"
+            " flex justify-center items-center text-white text-xl font-bold w-10 sm:w-14 h-10 sm:h-14 border-2 border-zinc-800 rounded-md"
           }
           key={cell.id}
           id={cell.id}
