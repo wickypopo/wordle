@@ -1,9 +1,82 @@
 @import "tailwindcss";
 
 #root {
-  font-family: "Inter Tight", "Inter", "Helvetica", sans-serif;
+  font-family: "Kaio", "Inter", "Helvetica", sans-serif;
 }
 
+@theme {
+  --color-dark-1: oklch(0.2134 0 0);
+  --color-dark-2: oklch(0.2768 0 0);
+  --color-dark-3: oklch(0.3942 0 0);
+  --color-dark-4: oklch(0.8853 0 0);
+  --color-mass-pink: oklch(0.7542 0.1916 334.82);
+  --color-mass-blue: oklch(0.5277 0.2366 275.93);
+  --color-mass-lime: oklch(0.9123 0.1812 114.54);
+  --color-mass-orange: oklch(0.8192 0.1475 71.12);
+  --color-mass-brown: oklch(0.6479 0.0442 74.15);
+  --color-mass-cream: oklch(0.964 0.0629 96.63);
+}
+
+.trim-text {
+  text-box-trim: trim-both;
+  text-box-edge: cap alphabetic;
+}
+
+@font-face {
+  font-family: "Kaio";
+  src: url("./assets/fonts/Kaio-Light.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Kaio";
+  src: url("./assets/fonts/Kaio-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Kaio";
+  src: url("./assets/fonts/Kaio-Medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Kaio";
+  src: url("./assets/fonts/Kaio-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Kaio";
+  src: url("./assets/fonts/Kaio-Black.otf") format("opentype");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Kaio Krilin";
+  src: url("./assets/fonts/Kaio-Krilin.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Kaio Super";
+  src: url("./assets/fonts/Kaio-Super.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 /* UTILITY */
 
 .enter {
