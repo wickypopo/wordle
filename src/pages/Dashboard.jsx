@@ -58,7 +58,6 @@ export default function Dashboard() {
     async function fetchData() {
       const { data, error } = await supabase.from("game_history").select();
       setGames(data.reverse());
-      console.log(data);
     }
     fetchData();
   }, []);
@@ -67,7 +66,6 @@ export default function Dashboard() {
     async function fetchData() {
       const { data, error } = await supabase.from("user_stats").select();
       setUserStats(data.reverse());
-      console.log(data);
     }
     fetchData();
   }, []);
@@ -75,7 +73,6 @@ export default function Dashboard() {
   const ratio = userStats.forEach((item) => {
     console.log(item);
     const winLoss = item.wins / item.losses;
-    console.log(winLoss);
   });
 
   const displayGames = games.map((item) => {
