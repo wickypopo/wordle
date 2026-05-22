@@ -71,7 +71,6 @@ export default function Dashboard() {
   }, []);
 
   const ratio = userStats.forEach((item) => {
-    console.log(item);
     const winLoss = item.wins / item.losses;
   });
 
