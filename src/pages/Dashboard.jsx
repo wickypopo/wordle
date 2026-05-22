@@ -135,10 +135,11 @@ export default function Dashboard() {
           <Settings color="#cacaca" />
         </button>
       </div>
-      */}
       <button onClick={signOut} className="p-1 bg-red-500/50 w-full">
         logout
       </button>
+      */}
+
       <main className="flex flex-col min-w-screen min-h-screen gap-4 sm:gap-10 bg-zinc-950 text-zinc-50 p-8 gap-8">
         <div className="flex w-full gap-2">
           <div
