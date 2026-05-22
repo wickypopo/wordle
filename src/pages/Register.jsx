@@ -1,7 +1,11 @@
 import { Link } from "react-router-dom";
 import { supabase } from "../utils/supabase";
+import { useState } from "react";
+import { Smile } from "lucide-react";
+import { motion } from "motion/react";
 
 export default function Register() {
+  const [formSubmit, setFormSubmit] = useState(false);
   //
   async function registerNewUser(e) {
     e.preventDefault();
@@ -27,7 +31,10 @@ export default function Register() {
       <section className="flex flex-col gap-4 w-full">
         <h1 className="text-4xl">Register</h1>
         <form
-          onSubmit={(e) => registerNewUser(e)}
+          onSubmit={(e) => {
+            setFormSubmit(true);
+            return registerNewUser(e);
+          }}
           className="flex flex-col gap-2"
         >
           <input
@@ -62,6 +69,33 @@ export default function Register() {
             <span className="text-green-500">Login here</span>
           </Link>
         </p>
+        {formSubmit ? (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-black/60 absolute inset-0 flex justify-center items-center"
+          >
+            <div className="size-90 bg-mass-pink rounded-4xl flex flex-col justify-center items-center">
+              <div className="flex mb-4">
+                <Smile className="text-mass-blue size-20 rotate-45" />
+                <Smile className="text-mass-orange size-20 rotate-15" />
+                <Smile className="text-mass-lime size-20 -rotate-25" />
+              </div>
+
+              <span className="text-4xl font-bold">
+                Thanks for <br />
+                signing up!
+              </span>
+              <span className="text-dark-4">Please check your Inbox</span>
+              <button
+                onClick={() => setFormSubmit(false)}
+                className="bg-mass-blue p-5 rounded-full text-semibold leading-none trim-text text-xl mt-4"
+              >
+                Got it!
+              </button>
+            </div>
+          </motion.div>
+        ) : null}
       </section>
     </main>
   );

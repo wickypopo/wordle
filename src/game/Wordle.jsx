@@ -3,11 +3,12 @@ import toast, { Toaster } from "react-hot-toast";
 import { motion } from "motion/react";
 import { WordData } from "../assets/WordData";
 import { nanoid } from "nanoid";
-import { Delete, X } from "lucide-react";
+import { Delete, X, ArrowLeft } from "lucide-react";
 import { style } from "motion/react-client";
 import Confetti from "react-confetti-boom";
 import { supabase } from "../utils/supabase";
 import { useAuth } from "../utils/useAuth";
+import { Link } from "react-router-dom";
 
 function Wordle() {
   const { user, loading } = useAuth();
@@ -44,7 +45,7 @@ function Wordle() {
       { key: "l", type: "letter", status: null },
     ],
     [
-      { key: "enter", label: "ENTER", type: "action" },
+      { key: "Enter", label: "ENTER", type: "action" },
       { key: "y", type: "letter", status: null },
       { key: "x", type: "letter", status: null },
       { key: "c", type: "letter", status: null },
@@ -128,7 +129,7 @@ function Wordle() {
               <button
                 className={
                   key.key +
-                  " flex justify-center items-center text-white sm:w-20 h-14 bg-zinc-500 rounded-md px-2"
+                  " flex justify-center items-center text-white sm:w-20 h-14 bg-mass-pink rounded-xl leading-none trim-text px-2"
                 }
                 onClick={() => handleKeyboardDelete()}
                 key={nanoid()}
@@ -136,12 +137,12 @@ function Wordle() {
                 <Delete size="24" />
               </button>
             );
-          } else if (key.key === "enter") {
+          } else if (key.key === "Enter") {
             return (
               <button
                 className={
                   key.key +
-                  " text-white sm:w-20 h-14 bg-zinc-500 rounded-md font-bold text-xs sm:text-[16px] px-2"
+                  " text-white sm:w-20 h-14 bg-mass-pink rounded-xl leading-none trim-text font-bold text-xs sm:text-[16px] px-2"
                 }
                 onClick={() => handleKeyboardSubmit(key.key)}
                 key={nanoid()}
@@ -154,7 +155,7 @@ function Wordle() {
               <button
                 className={
                   key.status +
-                  " text-white w-full sm:w-14 h-14 bg-zinc-500 rounded-md font-bold"
+                  " text-white w-full sm:w-14 h-14 bg-dark-3 rounded-xl leading-none trim-text font-bold"
                 }
                 onClick={() => handleKeyboard(key.key)}
                 key={nanoid()}
@@ -169,12 +170,12 @@ function Wordle() {
   });
 
   const playingBoard = rows.map((row) => (
-    <div className="flex gap-2" key={nanoid()}>
+    <div className="flex justify-center gap-2 w-full h-full" key={nanoid()}>
       {row.map((cell) => (
         <div
           className={
             cell.status +
-            " flex justify-center items-center text-white text-xl font-bold w-[14vw] sm:w-14 h-[14vw] sm:h-14 border-2 border-zinc-800 rounded-md"
+            " flex justify-center items-center text-white text-xl font-bold h-15 w-15 border-2 border-zinc-800 rounded-xl"
           }
           key={cell.id}
           id={cell.id}
@@ -412,7 +413,7 @@ function Wordle() {
   async function saveGameStats({ win }) {
     const { data: stats, error } = await supabase
       .from("user_stats")
-      .select("*")
+      .select()
       .eq("user_id", user.id);
 
     if (error) {
@@ -420,14 +421,9 @@ function Wordle() {
       return;
     }
 
-    const newCurrentStreak = win ? stats[0].current_streak + 1 : 0;
-    const newMaxStreak =
-      newCurrentStreak > stats[0].max_streak
-        ? newCurrentStreak
-        : stats[0].max_streak;
-
     if (stats.length === 0) {
       const { data, error } = await supabase.from("user_stats").insert({
+        username: user.user_metadata.username,
         user_id: user.id,
         wins: win ? 1 : 0,
         losses: win ? 0 : 1,
@@ -437,6 +433,11 @@ function Wordle() {
         total_tries: round,
       });
     } else {
+      const newCurrentStreak = win ? stats[0].current_streak + 1 : 0;
+      const newMaxStreak =
+        newCurrentStreak > stats[0].max_streak
+          ? newCurrentStreak
+          : stats[0].max_streak;
       const { data, error } = await supabase
         .from("user_stats")
         .update({
@@ -458,26 +459,23 @@ function Wordle() {
   }
 
   return (
-    <main className="flex flex-col min-w-screen min-h-screen justify-center items-center gap-8 sm:gap-10 bg-zinc-950">
+    <main className="flex flex-col min-w-screen min-h-screen p-8 pt-20 gap-8 sm:gap-10 bg-zinc-950">
       <Toaster position="top-center" reverseOrder={false} />
+      <Link
+        to="/"
+        className="flex justify-center items-center size-10 bg-mass-pink absolute left-8 top-4 rounded-full"
+      >
+        <X className="size-5 text-white" />
+      </Link>
       {/* ================================= */}
-      {win || loss ? null : (
-        <h1 className="text-zinc-50 text-4xl text-700">Wordle</h1>
-      )}
 
       {win ? <Confetti /> : null}
-      {win ? (
-        <h1 className="text-zinc-50 text-4xl text-700">You Won!</h1>
-      ) : null}
-      {loss ? <Confetti /> : null}
-      {loss ? (
-        <h1 className="text-zinc-50 text-4xl text-700">
-          You Lost, the right word was {randomWord}
-        </h1>
-      ) : null}
+
       {/* ================================= */}
-      <div className="flex flex-col gap-2">{playingBoard}</div>
-      <div className="flex flex-col gap-2">{keyboard}</div>
+      <div className="flex flex-col gap-2 justify-center">{playingBoard}</div>
+      <div className="absolute bottom-4 left-4 right-4 flex flex-col gap-2">
+        {keyboard}
+      </div>
       {win || loss ? (
         <button
           className="bg-violet-600 text-white rounded-md font-bold p-4"

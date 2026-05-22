@@ -2,6 +2,7 @@
 
 #root {
   font-family: "Kaio", "Inter", "Helvetica", sans-serif;
+  background-color: black;
 }
 
 @theme {
@@ -78,13 +79,6 @@
   font-display: swap;
 }
 /* UTILITY */
-
-.enter {
-  background-color: var(--color-violet-600) !important;
-}
-.backspace {
-  background-color: var(--color-violet-600) !important;
-}
 
 .active {
   background-color: var(--color-zinc-500) !important;
