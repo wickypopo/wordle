@@ -459,7 +459,7 @@ function Wordle() {
   }
 
   return (
-    <main className="flex flex-col min-w-screen h-dvh p-8 pt-20 gap-8 sm:gap-10 bg-zinc-950">
+    <main className="flex flex-col min-w-screen h-lvh p-8 pt-20 gap-8 sm:gap-10 bg-zinc-950">
       <Toaster position="top-center" reverseOrder={false} />
       <Link
         to="/"
