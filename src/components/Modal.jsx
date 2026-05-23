@@ -1,7 +1,14 @@
 import { AnimatePresence, motion } from "motion/react";
 import { X } from "lucide-react";
 
-export default function Modal({ children, state, setState }) {
+export default function Modal({ children, state, setState, variant = "pink" }) {
+  const variants = {
+    pink: "bg-mass-pink",
+    blue: "bg-mass-blue",
+    orange: "bg-mass-orange",
+    lime: "bg-mass-lime",
+  };
+
   return (
     <AnimatePresence>
       {state ? (
@@ -11,7 +18,7 @@ export default function Modal({ children, state, setState }) {
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", duration: 0.5 }}
-            className="fixed top-15 left-0 right-0 -bottom-20 z-20 bg-mass-pink rounded-t-4xl flex flex-col gap-2 p-8 pb-25 overflow-y-auto"
+            className={`${variants[variant]} fixed top-15 left-0 right-0 -bottom-20 z-20 rounded-t-4xl flex flex-col gap-2 p-8 pb-25 overflow-y-auto`}
           >
             <X
               onClick={() => setState(!state)}

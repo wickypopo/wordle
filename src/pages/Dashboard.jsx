@@ -1,7 +1,15 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "../utils/supabase";
-import { Settings, X, Crown, Flame, ArrowRight, GhostIcon } from "lucide-react";
+import {
+  Settings,
+  X,
+  Crown,
+  Flame,
+  ArrowRight,
+  GhostIcon,
+  Check,
+} from "lucide-react";
 import Modal from "../components/Modal";
 import { motion, stagger } from "motion/react";
 
@@ -9,6 +17,7 @@ export default function Dashboard() {
   const [games, setGames] = useState([]);
   const [userStats, setUserStats] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
+  const [openSettings, setOpenSettings] = useState(false);
 
   let count = 0;
 
@@ -146,28 +155,25 @@ export default function Dashboard() {
 
   return (
     <>
-      {/* 
       <div className="flex justify-between pt-4 px-8 bg-zinc-950">
-        <div className="size-10 rounded-full bg-zinc-100 flex items-center justify-center text-white font-bold">
-          <FluentEmoji emoji="🤡" animated />
-        </div>
-        <button onClick={() => setIsVisible(!isVisible)}>
+        {/* <div className="size-10 rounded-full bg-zinc-100 flex items-center justify-center text-white font-bold"></div> */}
+        <h1 className="text-white text-2xl font-bold">Wordle</h1>
+        <button
+          onClick={() => setOpenSettings(!openSettings)}
+          className="cursor-pointer"
+        >
           <Settings color="#cacaca" />
         </button>
       </div>
-      */}
-      <button onClick={signOut} className="p-1 bg-red-500/50 w-full">
-        logout
-      </button>
       <main className="flex flex-col min-w-screen min-h-screen gap-4 sm:gap-10 bg-zinc-950 text-zinc-50 p-8 gap-8">
         <div className="flex w-full gap-2">
-          <div
+          <button
             onClick={() => setIsVisible(!isVisible)}
-            className="flex w-full justify-between items-center bg-dark-4 rounded-3xl py-2 px-4 gap-2 text-black font-medium text-sm h-12"
+            className="flex w-full justify-between items-center bg-dark-4 rounded-3xl py-2 px-4 gap-2 text-black font-medium text-sm h-12 cursor-pointer"
           >
             <span className="leading-none trim-text">Leaderboard</span>
             <Crown size={"20px"} className="text-mass-blue" />
-          </div>
+          </button>
           <div className="flex w-full justify-between items-center bg-dark-2 rounded-3xl py-2 px-4 gap-2 font-medium text-sm h-12">
             <span className="leading-none trim-text">Daily streak:</span>
             <div className="flex items-center gap-1">
@@ -221,6 +227,81 @@ export default function Dashboard() {
           animate="open"
         >
           {displayLeaderboard}
+        </motion.div>
+      </Modal>
+      <Modal variant="lime" state={openSettings} setState={setOpenSettings}>
+        <h2 className="text-4xl text-black font-bold">Settings</h2>
+        <motion.div
+          initial="closed"
+          variants={leaderboardContainer}
+          animate="open"
+          className="flex flex-col h-full justify-between"
+        >
+          <div className="flex flex-col gap-2 border-t-4 pt-4">
+            <label
+              className="text-dark-2 tracking-tigh font-medium text-xl text-dark-3"
+              htmlFor="username"
+            >
+              Change Username
+            </label>
+            <div className="flex">
+              <input
+                onClick={() => {}}
+                type="username"
+                name="username"
+                id=""
+                placeholder="Username"
+                className="w-full bg-mass-blue text-white p-4 rounded-full focus:outline-0"
+              />
+              <button className="bg-mass-pink h-full px-4 rounded-full">
+                <Check />
+              </button>
+            </div>
+            <label
+              className="text-dark-2 tracking-tigh font-medium text-xl text-dark-3 mt-4"
+              htmlFor="email"
+            >
+              Change E-mail
+            </label>
+            <div className="flex">
+              <input
+                onClick={() => {}}
+                type="email"
+                name="email"
+                id=""
+                placeholder="E-mail"
+                className="w-full bg-mass-blue text-white p-4 rounded-full focus:outline-0"
+              />
+              <button className="bg-mass-pink h-full px-4 rounded-full">
+                <Check />
+              </button>
+            </div>
+            <label
+              className="text-dark-2 tracking-tigh font-medium text-xl text-dark-3 mt-4"
+              htmlFor="password"
+            >
+              Change Password
+            </label>
+            <div className="flex">
+              <input
+                onClick={() => {}}
+                type="password"
+                name="password"
+                id=""
+                placeholder="New Password"
+                className="w-full bg-mass-blue text-white p-4 rounded-full focus:outline-0"
+              />
+              <button className="bg-mass-pink h-full px-4 rounded-full">
+                <Check />
+              </button>
+            </div>
+          </div>
+          <button
+            onClick={signOut}
+            className="mt-2 p-4 rounded-full bg-black w-full text-white"
+          >
+            Logout
+          </button>
         </motion.div>
       </Modal>
     </>

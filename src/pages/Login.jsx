@@ -25,33 +25,33 @@ export default function Login() {
   }
 
   return (
-    <main className="flex flex-col min-w-screen min-h-screen justify-center items-center gap-8 sm:gap-10 bg-zinc-950 text-zinc-50 p-12">
+    <main className="flex flex-col min-w-screen min-h-screen justify-center items-center gap-8 sm:gap-10 bg-mass-pink text-zinc-50 p-8">
       <section className="flex flex-col gap-4 w-full">
-        <h1 className="text-4xl">Login</h1>
+        <h1 className="text-4xl font-bold">Login</h1>
         <form onSubmit={(e) => loginUser(e)} className="flex flex-col gap-2">
           <input
             type="email"
             name="email"
             id=""
             placeholder="E-Mail"
-            className="bg-zinc-900 p-2 rounded"
+            className="bg-mass-blue text-white p-4 rounded-full focus:outline-4 outline-mass-lime"
           />
           <input
             type="password"
             name="password"
             id=""
             placeholder="Password"
-            className="bg-zinc-900 p-2 rounded"
+            className="bg-mass-blue text-white p-4 rounded-full focus:outline-4 outline-mass-lime"
           />
           <input
             type="submit"
-            className="bg-zinc-50 text-zinc-950 rounded p-2 font-medium"
+            className="bg-zinc-50 text-zinc-950 rounded-full p-4 font-medium"
           />
         </form>
         <p>
           Don't have a Account?{" "}
           <Link to="/register">
-            <span className="text-green-500">Register here</span>
+            <span className="text-mass-lime">Register here</span>
           </Link>
         </p>
       </section>

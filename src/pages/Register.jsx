@@ -27,9 +27,9 @@ export default function Register() {
   }
 
   return (
-    <main className="flex flex-col min-w-screen min-h-screen justify-center items-center gap-8 sm:gap-10 bg-zinc-950 text-zinc-50 p-12">
+    <main className="flex flex-col min-w-screen min-h-screen justify-center items-center gap-8 sm:gap-10 bg-mass-pink text-white p-8">
       <section className="flex flex-col gap-4 w-full">
-        <h1 className="text-4xl">Register</h1>
+        <h1 className="text-4xl font-bold">Register</h1>
         <form
           onSubmit={(e) => {
             setFormSubmit(true);
@@ -42,31 +42,31 @@ export default function Register() {
             name="username"
             id=""
             placeholder="Benutzername"
-            className="bg-zinc-900 p-2 rounded"
+            className="bg-mass-blue text-white p-4 rounded-full focus:outline-4 outline-mass-lime"
           />
           <input
             type="email"
             name="email"
             id=""
             placeholder="E-Mail"
-            className="bg-zinc-900 p-2 rounded"
+            className="bg-mass-blue text-white p-4 rounded-full focus:outline-4 outline-mass-lime"
           />
           <input
             type="password"
             name="password"
             id=""
             placeholder="Password"
-            className="bg-zinc-900 p-2 rounded"
+            className="bg-mass-blue text-white p-4 rounded-full focus:outline-4 outline-mass-lime"
           />
           <input
             type="submit"
-            className="bg-zinc-50 text-zinc-950 rounded p-2 font-medium"
+            className="bg-zinc-50 text-zinc-950 rounded-full p-4 font-medium"
           />
         </form>
         <p>
           Already have a Account?{" "}
           <Link to="/login">
-            <span className="text-green-500">Login here</span>
+            <span className="text-mass-lime">Login here</span>
           </Link>
         </p>
         {formSubmit ? (
@@ -77,8 +77,8 @@ export default function Register() {
           >
             <div className="size-90 bg-mass-pink rounded-4xl flex flex-col justify-center items-center">
               <div className="flex mb-4">
-                <Smile className="text-mass-blue size-20 rotate-45" />
-                <Smile className="text-mass-orange size-20 rotate-15" />
+                <Smile className="-mr-6 text-mass-blue size-20 rotate-45" />
+                <Smile className="-mr-6 text-mass-orange size-20 rotate-15" />
                 <Smile className="text-mass-lime size-20 -rotate-25" />
               </div>
 
