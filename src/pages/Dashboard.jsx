@@ -125,7 +125,7 @@ export default function Dashboard() {
       <motion.div
         variants={leaderboardList}
         key={item.id}
-        className="border-t-2 border-dark-4 py-4 text-2xl flex flex-col"
+        className="border-t-4 border-dark-4 py-4 text-2xl flex flex-col"
       >
         <div className="flex gap-4">
           <span className="font-bold text-mass-blue">01</span>
