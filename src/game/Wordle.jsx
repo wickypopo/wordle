@@ -459,7 +459,7 @@ function Wordle() {
   }
 
   return (
-    <main className="flex flex-col min-w-screen min-h-screen p-8 pt-20 gap-8 sm:gap-10 bg-zinc-950">
+    <main className="flex flex-col min-w-screen h-dvh p-8 pt-20 gap-8 sm:gap-10 bg-zinc-950">
       <Toaster position="top-center" reverseOrder={false} />
       <Link
         to="/"
@@ -477,12 +477,19 @@ function Wordle() {
         {keyboard}
       </div>
       {win || loss ? (
-        <button
-          className="bg-violet-600 text-white rounded-md font-bold p-4"
-          onClick={startNewGame}
-        >
-          Start new game
-        </button>
+        <div className="absolute inset-0 bg-black/60 flex flex-col justify-center items-center gap-2">
+          <button
+            className="bg-mass-blue text-white rounded-4xl font-bold py-4 px-6"
+            onClick={startNewGame}
+          >
+            Start new game
+          </button>
+          <Link to="/">
+            <button className="bg-mass-pink text-white rounded-4xl font-bold py-4 px-6">
+              Back to Home
+            </button>
+          </Link>
+        </div>
       ) : null}
     </main>
   );
