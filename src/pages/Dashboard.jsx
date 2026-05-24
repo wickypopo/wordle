@@ -1,23 +1,26 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "../utils/supabase";
 import {
   Settings,
   X,
   Crown,
-  Flame,
+  Star,
   ArrowRight,
   GhostIcon,
   Check,
 } from "lucide-react";
 import Modal from "../components/Modal";
 import { motion, stagger } from "motion/react";
+import { FluentEmoji } from "emoted-fluent-emoji";
+import AnimatedInput from "../components/AnimatedInput";
 
 export default function Dashboard() {
   const [games, setGames] = useState([]);
   const [userStats, setUserStats] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
   const [openSettings, setOpenSettings] = useState(false);
+  const [openProfile, setOpenProfile] = useState(false);
 
   let count = 0;
 
@@ -28,14 +31,14 @@ export default function Dashboard() {
     "bg-mass-orange",
   ];
 
-  const leaderboardContainer = {
+  const staggerContainer = {
     closed: { opacity: 0 },
     open: {
       opacity: 1,
       transition: { staggerChildren: 0.05, delayChildren: 0.2 },
     },
   };
-  const leaderboardList = {
+  const staggerChildren = {
     closed: { opacity: 0, y: 20 },
     open: { opacity: 1, y: 0 },
   };
@@ -49,6 +52,16 @@ export default function Dashboard() {
   const gamesList = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 },
+  };
+
+  const container = {
+    closed: {},
+    open: {},
+  };
+
+  const children = {
+    closed: { width: 0, opacity: 0 },
+    open: { width: "56px", opacity: 1 },
   };
 
   useEffect(() => {
@@ -66,16 +79,6 @@ export default function Dashboard() {
     }
     fetchData();
   }, []);
-
-  const userStatsRatio = userStats.map((item) => {
-    const games = item.wins + item.losses;
-    const winRate = games === 0 ? 0 : item.wins / games;
-
-    return {
-      ...item,
-      ratio: Math.round(winRate * 100) + "%",
-    };
-  });
 
   const displayGames = games.map((item) => {
     count < 3 ? count++ : (count = 0);
@@ -97,15 +100,36 @@ export default function Dashboard() {
     );
   });
 
+  const sortetLeaderboard = userStats.sort((a, b) => b.wins - a.wins);
+
+  const userStatsRatio = sortetLeaderboard.map((item) => {
+    const games = item.wins + item.losses;
+    const winRate = games === 0 ? 0 : item.wins / games;
+    const position = userStats.indexOf(item) + 1;
+
+    return {
+      ...item,
+      ratio: Math.round(winRate * 100) + "%",
+      position: position,
+    };
+  });
+
   const displayLeaderboard = userStatsRatio.map((item) => {
     return (
       <motion.div
-        variants={leaderboardList}
+        variants={staggerChildren}
         key={item.id}
-        className="border-t-4 border-dark-4 py-4 text-2xl flex flex-col"
+        className="border-t-2 border-dark-4 py-4 text-2xl flex flex-col"
       >
         <div className="flex gap-4">
-          <span className="font-bold text-mass-blue">01</span>
+          <span
+            className="font-bold text-mass-blue"
+            style={
+              item.position <= 3 ? { color: "var(--color-mass-lime)" } : null
+            }
+          >
+            {item.position}
+          </span>
           <span className="font-bold">{item.username}</span>
         </div>
         <div className="flex gap-2 w-full">
@@ -129,19 +153,30 @@ export default function Dashboard() {
   async function signOut() {
     const { error } = await supabase.auth.signOut();
   }
+  async function changeUserName() {
+    const { error } = await supabase.auth.signOut();
+  }
+  async function changeEmail() {
+    const { error } = await supabase.auth.signOut();
+  }
+  async function changePassword() {
+    const { error } = await supabase.auth.signOut();
+  }
 
   return (
     <>
-      <div className="flex justify-between pt-4 px-8 bg-zinc-950">
-        {/* <div className="size-10 rounded-full bg-zinc-100 flex items-center justify-center text-white font-bold"></div> */}
-        <h1 className="text-white text-2xl font-bold">Wordle</h1>
+      <header className="flex justify-between pt-4 px-8 bg-zinc-950">
+        {/* <div className="size-10 rounded-full bg-zinc-100 flex items-center justify-center text-white font-bold"></div>*/}
+        <h1 className="text-white text-2xl font-bold leading-none text-trim">
+          Wordle
+        </h1>
         <button
           onClick={() => setOpenSettings(!openSettings)}
           className="cursor-pointer"
         >
           <Settings color="#cacaca" />
         </button>
-      </div>
+      </header>
       <main className="flex flex-col min-w-screen min-h-screen gap-4 sm:gap-10 bg-zinc-950 text-zinc-50 p-8 gap-8">
         <div className="flex w-full gap-2">
           <motion.button
@@ -158,13 +193,11 @@ export default function Dashboard() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="flex w-full justify-between items-center bg-dark-2 rounded-3xl py-2 px-4 gap-2 font-medium text-sm h-12"
+            onClick={() => setOpenProfile(!openProfile)}
+            className="flex w-full justify-between items-center bg-dark-2 rounded-3xl py-2 px-4 gap-2 font-medium text-sm h-12 cursor-pointer"
           >
-            <span className="leading-none trim-text">Daily streak:</span>
-            <div className="flex items-center gap-1">
-              <span className="leading-none trim-text font-bold">0</span>
-              <Flame size={"20px"} className="text-mass-pink" />
-            </div>
+            <span className="leading-none trim-text">Stats</span>
+            <Star size={"20px"} className="text-mass-pink" />
           </motion.div>
         </div>
 
@@ -217,17 +250,13 @@ export default function Dashboard() {
           >
             <ArrowRight size={"40px"} />
           </motion.div>
-          <div className="absolute inset-0 bg-linear-to-b from-black/0 to-black/20 pointer-events-none " />
+          <div className="absolute inset-0 bg-linear-to-b from-black/0 to-black/50 pointer-events-none " />
           <div className="absolute inset-0 backdrop-blur-xl [mask-image:linear-gradient(to_bottom,transparent_10%,black_60%)] pointer-events-none " />
         </Link>
       </main>
-      <Modal state={isVisible} setState={setIsVisible}>
+      <Modal variant="pink" state={isVisible} setState={setIsVisible}>
         <h2 className="text-4xl text-white font-bold">Leaderboard</h2>
-        <motion.div
-          initial="closed"
-          variants={leaderboardContainer}
-          animate="open"
-        >
+        <motion.div initial="closed" variants={staggerContainer} animate="open">
           {displayLeaderboard}
         </motion.div>
       </Modal>
@@ -236,73 +265,34 @@ export default function Dashboard() {
         <div className="flex flex-col h-full justify-between">
           <motion.div
             initial="closed"
-            variants={leaderboardContainer}
+            variants={staggerContainer}
             animate="open"
-            className="flex flex-col gap-2 border-t-4 pt-4 border-dark-4"
+            className="flex flex-col gap-2 border-t-2 pt-4 border-dark-4"
           >
-            <motion.div variants={leaderboardList} className="flex flex-col">
-              <label
-                className="text-white tracking-tigh font-medium text-lg"
-                htmlFor="username"
-              >
-                Change Username
-              </label>
-              <div className="flex">
-                <input
-                  onClick={() => {}}
-                  type="username"
-                  name="username"
-                  id=""
-                  placeholder="Username"
-                  className="w-full bg-mass-orange text-white p-4 rounded-full focus:outline-0"
-                />
-                <button className="bg-mass-pink h-full px-4 rounded-full">
-                  <Check />
-                </button>
-              </div>
-            </motion.div>
-            <motion.div variants={leaderboardList} className="flex flex-col">
-              <label
-                className="text-white tracking-tigh font-medium text-lg mt-4"
-                htmlFor="email"
-              >
-                Change E-mail
-              </label>
-              <div className="flex">
-                <input
-                  onClick={() => {}}
-                  type="email"
-                  name="email"
-                  id=""
-                  placeholder="E-mail"
-                  className="w-full bg-mass-orange text-white p-4 rounded-full focus:outline-0"
-                />
-                <button className="bg-mass-pink h-full px-4 rounded-full">
-                  <Check />
-                </button>
-              </div>
-            </motion.div>
-            <motion.div variants={leaderboardList} className="flex flex-col">
-              <label
-                className="text-white tracking-tigh font-medium text-lg mt-4"
-                htmlFor="password"
-              >
-                Change Password
-              </label>
-              <div className="flex">
-                <input
-                  onClick={() => {}}
-                  type="password"
-                  name="password"
-                  id=""
-                  placeholder="New Password"
-                  className="w-full bg-mass-orange text-white p-4 rounded-full focus:outline-0"
-                />
-                <button className="bg-mass-pink h-full px-4 rounded-full">
-                  <Check />
-                </button>
-              </div>
-            </motion.div>
+            <AnimatedInput
+              type="text"
+              text="username"
+              placeholder="Username"
+              upperParentVariants={staggerChildren}
+              parentVariants={container}
+              childrenVariants={children}
+            />
+            <AnimatedInput
+              type="email"
+              text="email"
+              placeholder="E-Mail"
+              upperParentVariants={staggerChildren}
+              parentVariants={container}
+              childrenVariants={children}
+            />
+            <AnimatedInput
+              type="password"
+              text="password"
+              placeholder="Password"
+              upperParentVariants={staggerChildren}
+              parentVariants={container}
+              childrenVariants={children}
+            />
           </motion.div>
           <button
             onClick={signOut}
@@ -310,6 +300,17 @@ export default function Dashboard() {
           >
             Logout
           </button>
+        </div>
+      </Modal>
+      <Modal variant="orange" state={openProfile} setState={setOpenProfile}>
+        <h2 className="text-4xl text-black font-bold">Stats</h2>
+        <div className="flex flex-col h-full justify-between">
+          <motion.div
+            initial="closed"
+            variants={staggerContainer}
+            animate="open"
+            className="flex flex-col gap-2 border-t-2 pt-4 border-dark-2"
+          ></motion.div>
         </div>
       </Modal>
     </>

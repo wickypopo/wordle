@@ -23,7 +23,7 @@ export default function Modal({ children, state, setState, variant = "pink" }) {
             <X
               onClick={() => setState(!state)}
               size={"20px"}
-              className="absolute right-4 top-4 text-white"
+              className="absolute right-8 top-4 text-white"
             />
             {/*<div className="absolute left-1/2 -translate-x-1/2 top-2 h-2 w-35 bg-black rounded-full"></div>*/}
             {children}
