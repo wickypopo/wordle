@@ -14,14 +14,33 @@ import Modal from "../components/Modal";
 import { motion, stagger } from "motion/react";
 import { FluentEmoji } from "emoted-fluent-emoji";
 import AnimatedInput from "../components/AnimatedInput";
+import { useAuth } from "../utils/useAuth";
 
 export default function Dashboard() {
   const [games, setGames] = useState([]);
+  const [allUserStats, setAllUserStats] = useState([]);
   const [userStats, setUserStats] = useState([]);
-  const [isVisible, setIsVisible] = useState(false);
+
+  // Modal States
+  const [openLeaderboard, setOpenLeaderboard] = useState(false);
   const [openSettings, setOpenSettings] = useState(false);
   const [openProfile, setOpenProfile] = useState(false);
+  const [openPlay, setOpenPlay] = useState(false);
 
+  const anyModalOpen =
+    openLeaderboard || openSettings || openProfile || openPlay;
+
+  useEffect(() => {
+    document.body.style.overflow = anyModalOpen ? "hidden" : "";
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [anyModalOpen]);
+
+  // -----------------------
+
+  const { user } = useAuth();
   let count = 0;
 
   const colors = [
@@ -54,16 +73,6 @@ export default function Dashboard() {
     visible: { opacity: 1, y: 0 },
   };
 
-  const container = {
-    closed: {},
-    open: {},
-  };
-
-  const children = {
-    closed: { width: 0, opacity: 0 },
-    open: { width: "56px", opacity: 1 },
-  };
-
   useEffect(() => {
     async function fetchData() {
       const { data, error } = await supabase.from("game_history").select();
@@ -74,8 +83,22 @@ export default function Dashboard() {
 
   useEffect(() => {
     async function fetchData() {
-      const { data, error } = await supabase.from("user_stats").select();
+      const { data, error } = await supabase
+        .from("user_stats")
+        .select("*")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
       setUserStats(data);
+      console.log(data);
+    }
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    async function fetchData() {
+      const { data, error } = await supabase.from("user_stats").select();
+      setAllUserStats(data);
     }
     fetchData();
   }, []);
@@ -83,11 +106,20 @@ export default function Dashboard() {
   const displayGames = games.map((item) => {
     count < 3 ? count++ : (count = 0);
     const bgColor = colors[count];
+    console.log(item.win);
     return (
       <motion.div
         variants={gamesList}
         key={item.id}
         className={`flex justify-between ${bgColor} ${bgColor === "bg-mass-lime" || bgColor === "bg-mass-orange" ? "text-black" : null} rounded-3xl p-8`}
+        style={
+          item.win
+            ? null
+            : {
+                backgroundColor: "#141414",
+                color: "#353535",
+              }
+        }
       >
         <span className="text-4xl leading-none trim-text font-semibold">
           {item.word.toUpperCase()}
@@ -100,12 +132,12 @@ export default function Dashboard() {
     );
   });
 
-  const sortetLeaderboard = userStats.sort((a, b) => b.wins - a.wins);
+  const sortetLeaderboard = allUserStats.sort((a, b) => b.wins - a.wins);
 
   const userStatsRatio = sortetLeaderboard.map((item) => {
     const games = item.wins + item.losses;
     const winRate = games === 0 ? 0 : item.wins / games;
-    const position = userStats.indexOf(item) + 1;
+    const position = allUserStats.indexOf(item) + 1;
 
     return {
       ...item,
@@ -153,13 +185,29 @@ export default function Dashboard() {
   async function signOut() {
     const { error } = await supabase.auth.signOut();
   }
-  async function changeUserName() {
-    const { error } = await supabase.auth.signOut();
+  async function changeUserName(username) {
+    console.log(username);
+    const { error } = await supabase
+      .from("user_stats")
+      .update({ username: username })
+      .eq("user_id", user.id);
+
+    const { data } = await supabase.auth.updateUser({
+      data: {
+        display_name: username,
+        username: username,
+      },
+    });
   }
-  async function changeEmail() {
-    const { error } = await supabase.auth.signOut();
+
+  async function changeEmail(email) {
+    console.log(email);
+    const { data, error } = await supabase.auth.updateUser({
+      email: email,
+    });
+    console.log(data, error);
   }
-  async function changePassword() {
+  async function changePassword(password) {
     const { error } = await supabase.auth.signOut();
   }
 
@@ -183,7 +231,7 @@ export default function Dashboard() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            onClick={() => setIsVisible(!isVisible)}
+            onClick={() => setOpenLeaderboard(!openLeaderboard)}
             className="flex w-full justify-between items-center bg-dark-4 rounded-3xl py-2 px-4 gap-2 text-black font-medium text-sm h-12 cursor-pointer"
           >
             <span className="leading-none trim-text">Leaderboard</span>
@@ -228,14 +276,16 @@ export default function Dashboard() {
           )}
         </div>
 
-        <Link
+        <div className="fixed bottom-0 left-0 right-0 flex px-8 pt-12 pb-8">
+          {/*<Link
           to="/wordle"
           className="fixed bottom-0 left-0 right-0 flex px-8 pt-12 pb-8"
-        >
+        > */}
           <motion.button
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
+            onClick={() => setOpenPlay(true)}
             className="bg-mass-blue w-full p-4 text-xl rounded-full flex items-center justify-center shadow-xl shadow-black/30 z-20"
           >
             <span className="font-bold text-3xl leading-none trim-text">
@@ -246,15 +296,85 @@ export default function Dashboard() {
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
+            onClick={() => setOpenPlay(true)}
             className="min-h-20 min-w-20 bg-mass-pink rounded-full flex justify-center items-center shadow-xl shadow-black/30 z-20"
           >
             <ArrowRight size={"40px"} />
           </motion.div>
+
           <div className="absolute inset-0 bg-linear-to-b from-black/0 to-black/50 pointer-events-none " />
           <div className="absolute inset-0 backdrop-blur-xl [mask-image:linear-gradient(to_bottom,transparent_10%,black_60%)] pointer-events-none " />
-        </Link>
+        </div>
       </main>
-      <Modal variant="pink" state={isVisible} setState={setIsVisible}>
+      {openPlay ? (
+        <div
+          onClick={() => setOpenPlay(false)}
+          className="absolute inset-0 bg-black/60 flex p-8 overflow-hidden flex justify-center items-center"
+        >
+          <div className="flex bg-mass-pink rounded-4xl gap-2 p-12 flex flex-col justify-center items-center">
+            <span className="text-4xl text-white font-bold text-center">
+              Choose a <br /> Gamemode
+            </span>
+            <Link to="/wordle">
+              <div className="flex w-60 text-white">
+                <motion.button
+                  className="font-bold text-2xl leading-none trim-text bg-mass-blue w-full 
+              p-4 text-xl rounded-full flex items-center justify-center shadow-xl
+               shadow-black/30 z-20"
+                >
+                  Easy
+                </motion.button>
+                <div
+                  className="min-w-15 min-h-15 bg-mass-lime rounded-full flex 
+              justify-center items-center shadow-xl shadow-black/30 z-20 text-black"
+                >
+                  <ArrowRight size={"30px"} />
+                </div>
+              </div>
+            </Link>
+            <Link to="/wordle">
+              <div className="flex w-60 text-white">
+                <motion.button
+                  className="font-bold text-2xl leading-none trim-text bg-mass-blue w-full 
+              p-4 text-xl rounded-full flex items-center justify-center shadow-xl
+               shadow-black/30 z-20"
+                >
+                  Medium
+                </motion.button>
+                <div
+                  className="min-w-15 min-h-15 bg-mass-lime rounded-full flex 
+              justify-center items-center shadow-xl shadow-black/30 z-20 text-black"
+                >
+                  <ArrowRight size={"30px"} />
+                </div>
+              </div>
+            </Link>
+            <Link to="/wordle">
+              {" "}
+              <div className="flex w-60 text-white">
+                <motion.button
+                  className="font-bold text-2xl leading-none trim-text bg-mass-blue w-full 
+              p-4 text-xl rounded-full flex items-center justify-center shadow-xl
+               shadow-black/30 z-20"
+                >
+                  Hard
+                </motion.button>
+                <div
+                  className="min-w-15 min-h-15 bg-mass-lime rounded-full flex 
+              justify-center items-center shadow-xl shadow-black/30 z-20 text-black"
+                >
+                  <ArrowRight size={"30px"} />
+                </div>
+              </div>
+            </Link>
+          </div>
+        </div>
+      ) : null}
+      <Modal
+        variant="pink"
+        state={openLeaderboard}
+        setState={setOpenLeaderboard}
+      >
         <h2 className="text-4xl text-white font-bold">Leaderboard</h2>
         <motion.div initial="closed" variants={staggerContainer} animate="open">
           {displayLeaderboard}
@@ -270,28 +390,22 @@ export default function Dashboard() {
             className="flex flex-col gap-2 border-t-2 pt-4 border-dark-4"
           >
             <AnimatedInput
-              type="text"
               text="username"
               placeholder="Username"
+              submitFunction={changeUserName}
               upperParentVariants={staggerChildren}
-              parentVariants={container}
-              childrenVariants={children}
             />
             <AnimatedInput
-              type="email"
               text="email"
               placeholder="E-Mail"
+              submitFunction={changeEmail}
               upperParentVariants={staggerChildren}
-              parentVariants={container}
-              childrenVariants={children}
             />
             <AnimatedInput
-              type="password"
               text="password"
               placeholder="Password"
+              submitFunction={changePassword}
               upperParentVariants={staggerChildren}
-              parentVariants={container}
-              childrenVariants={children}
             />
           </motion.div>
           <button
@@ -310,7 +424,24 @@ export default function Dashboard() {
             variants={staggerContainer}
             animate="open"
             className="flex flex-col gap-2 border-t-2 pt-4 border-dark-2"
-          ></motion.div>
+          >
+            <span className="text-2xl text-black">
+              losses: {userStats.losses}
+            </span>
+            <span className="text-2xl text-black">wins: {userStats.wins}</span>
+            <span className="text-2xl text-black">
+              current streak: {userStats.current_streak}
+            </span>
+            <span className="text-2xl text-black">
+              games played: {userStats.games_played}
+            </span>
+            <span className="text-2xl text-black">
+              max streak: {userStats.max_streak}
+            </span>
+            <span className="text-2xl text-black">
+              total tries: {userStats.total_tries}
+            </span>
+          </motion.div>
         </div>
       </Modal>
     </>

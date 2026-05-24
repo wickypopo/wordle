@@ -16,7 +16,7 @@ export function AuthProvider({ children }) {
       } else if (event === "SIGNED_IN") {
         navigate("/");
         setLoading(false);
-        setUser(session.user ?? null);
+        setUser(session?.user ?? null);
       } else if (event === "SIGNED_OUT") {
         navigate("/login");
         setUser(null);
@@ -26,10 +26,9 @@ export function AuthProvider({ children }) {
       } else if (event === "TOKEN_REFRESHED") {
         // handle token refreshed event
       } else if (event === "USER_UPDATED") {
-        // handle user updated event
+        setUser(session?.user ?? null);
       }
     });
-
     // call unsubscribe to remove the callback
     return () => {
       data.subscription.unsubscribe();
