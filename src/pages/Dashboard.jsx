@@ -307,11 +307,18 @@ export default function Dashboard() {
         </div>
       </main>
       {openPlay ? (
-        <div
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
           onClick={() => setOpenPlay(false)}
           className="absolute inset-0 bg-black/60 flex p-8 overflow-hidden flex justify-center items-center"
         >
-          <div className="flex bg-mass-pink rounded-4xl gap-2 p-12 flex flex-col justify-center items-center">
+          <motion.div
+            initial={{ opacity: 0, y: 100 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex bg-mass-pink rounded-4xl gap-2 p-12 flex flex-col justify-center items-center"
+          >
             <span className="text-4xl text-white font-bold text-center">
               Choose a <br /> Gamemode
             </span>
@@ -332,7 +339,7 @@ export default function Dashboard() {
                 </div>
               </div>
             </Link>
-            <Link to="/wordle">
+            <Link to="/wordle-medium">
               <div className="flex w-60 text-white">
                 <motion.button
                   className="font-bold text-2xl leading-none trim-text bg-mass-blue w-full 
@@ -349,7 +356,7 @@ export default function Dashboard() {
                 </div>
               </div>
             </Link>
-            <Link to="/wordle">
+            <Link to="/wordle-hard">
               {" "}
               <div className="flex w-60 text-white">
                 <motion.button
@@ -367,8 +374,8 @@ export default function Dashboard() {
                 </div>
               </div>
             </Link>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       ) : null}
       <Modal
         variant="pink"

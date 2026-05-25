@@ -14,7 +14,6 @@ export function AuthProvider({ children }) {
       if (event === "INITIAL_SESSION") {
         // handle initial session
       } else if (event === "SIGNED_IN") {
-        navigate("/");
         setLoading(false);
         setUser(session?.user ?? null);
       } else if (event === "SIGNED_OUT") {

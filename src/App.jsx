@@ -6,6 +6,9 @@ import { Toaster } from "react-hot-toast";
 import Wordle from "./game/Wordle";
 import ProtectedRoute from "./lib/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
+import WordleMedium from "./game/WordleMedium";
+import WordleHard from "./game/WordleHard";
+import Test from "./pages/Test";
 
 export default function App() {
   return (
@@ -28,8 +31,25 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/wordle-medium"
+          element={
+            <ProtectedRoute>
+              <WordleMedium />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/wordle-hard"
+          element={
+            <ProtectedRoute>
+              <WordleHard />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/test" element={<Test />} />
       </Routes>
     </>
   );
