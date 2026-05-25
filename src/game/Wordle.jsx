@@ -337,15 +337,13 @@ function Wordle() {
     setWord([]);
 
     if (randomWord === jointWord) {
-      // Latest games:
-      // Word, tries, win/loss
-
       const { error } = await supabase.from("game_history").insert({
         username: user.user_metadata.username ?? "Unknown",
         word: randomWord,
         tries: round,
         win: true,
         user_id: user.id,
+        gamemode: "easy",
       });
 
       setWin(true);
@@ -366,6 +364,7 @@ function Wordle() {
         tries: round,
         win: false,
         user_id: user.id,
+        gamemode: "easy",
       });
       await saveGameStats({ win: false });
       setLoss(true);
@@ -425,12 +424,14 @@ function Wordle() {
       const { data, error } = await supabase.from("user_stats").insert({
         username: user.user_metadata.username,
         user_id: user.id,
-        wins: win ? 1 : 0,
-        losses: win ? 0 : 1,
+        total_wins: win ? 1 : 0,
+        total_losses: win ? 0 : 1,
         games_played: 1,
         current_streak: win ? 1 : 0,
         max_streak: win ? 1 : 0,
         total_tries: round,
+        easy_win: win ? 1 : 0,
+        easy_loss: win ? 0 : 1,
       });
     } else {
       const newCurrentStreak = win ? stats[0].current_streak + 1 : 0;
@@ -441,12 +442,14 @@ function Wordle() {
       const { data, error } = await supabase
         .from("user_stats")
         .update({
-          wins: win ? stats[0].wins + 1 : stats[0].wins,
-          losses: win ? stats[0].losses : stats[0].losses + 1,
+          total_wins: win ? stats[0].total_wins + 1 : stats[0].total_wins,
+          total_losses: win ? stats[0].total_losses : stats[0].total_losses + 1,
           games_played: stats[0].games_played + 1,
           current_streak: newCurrentStreak,
           max_streak: newMaxStreak,
           total_tries: stats[0].total_tries + round,
+          easy_win: win ? stats[0].easy_win + 1 : stats[0].easy_win,
+          easy_loss: win ? stats[0].easy_loss : stats[0].easy_loss + 1,
         })
         .eq("user_id", user.id)
         .select("*");

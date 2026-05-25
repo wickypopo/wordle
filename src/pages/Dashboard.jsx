@@ -106,7 +106,6 @@ export default function Dashboard() {
   const displayGames = games.map((item) => {
     count < 3 ? count++ : (count = 0);
     const bgColor = colors[count];
-    console.log(item.win);
     return (
       <motion.div
         variants={gamesList}
@@ -132,11 +131,25 @@ export default function Dashboard() {
     );
   });
 
-  const sortetLeaderboard = allUserStats.sort((a, b) => b.wins - a.wins);
+  const sortetLeaderboard = allUserStats.sort(
+    (a, b) => b.total_wins - a.total_wins,
+  );
+
+  function getWinRate(win, loss) {
+    if (win === undefined || win === null) {
+      win = 0;
+    }
+    if (loss === undefined || loss === null) {
+      loss = 0;
+    }
+    const games = win + loss;
+    const winrate = games === 0 ? 0 : (win / games) * 100;
+    const beautify = winrate.toFixed(0) + "%";
+    return beautify;
+  }
 
   const userStatsRatio = sortetLeaderboard.map((item) => {
-    const games = item.wins + item.losses;
-    const winRate = games === 0 ? 0 : item.wins / games;
+    const winRate = games === 0 ? 0 : item.total_wins / item.games_played;
     const position = allUserStats.indexOf(item) + 1;
 
     return {
@@ -167,11 +180,11 @@ export default function Dashboard() {
         <div className="flex gap-2 w-full">
           <div className="flex flex-col text-xl w-full">
             <span className="text-base text-dark-2">wins: </span>
-            <span className="font-bold">{item.wins}</span>
+            <span className="font-bold">{item.total_wins}</span>
           </div>
           <div className="flex flex-col text-xl w-full">
             <span className="text-base text-dark-2">losses: </span>
-            <span className="font-bold">{item.losses}</span>
+            <span className="font-bold">{item.total_losses}</span>
           </div>
           <div className="flex flex-col text-xl w-full">
             <span className="text-base text-dark-2">ratio: </span>
@@ -423,7 +436,7 @@ export default function Dashboard() {
           </button>
         </div>
       </Modal>
-      <Modal variant="orange" state={openProfile} setState={setOpenProfile}>
+      <Modal variant="blue" state={openProfile} setState={setOpenProfile}>
         <h2 className="text-4xl text-black font-bold">Stats</h2>
         <div className="flex flex-col h-full justify-between">
           <motion.div
@@ -432,22 +445,110 @@ export default function Dashboard() {
             animate="open"
             className="flex flex-col gap-2 border-t-2 pt-4 border-dark-2"
           >
-            <span className="text-2xl text-black">
-              losses: {userStats?.losses}
-            </span>
-            <span className="text-2xl text-black">wins: {userStats?.wins}</span>
-            <span className="text-2xl text-black">
-              current streak: {userStats?.current_streak}
-            </span>
-            <span className="text-2xl text-black">
-              games played: {userStats?.games_played}
-            </span>
-            <span className="text-2xl text-black">
-              max streak: {userStats?.max_streak}
-            </span>
-            <span className="text-2xl text-black">
-              total tries: {userStats?.total_tries}
-            </span>
+            <div className="flex w-full justify-between">
+              <div className="flex flex-col w-1/3">
+                <span className="text-dark-4">Wins</span>
+                <span className="text-5xl font-bold text-white">
+                  {" "}
+                  {userStats.total_wins ? userStats.total_wins : 0}
+                </span>
+                <span className="text-dark-4">Games</span>
+                <span className="text-xl font-bold text-white">
+                  {userStats.games_played ? userStats.games_played : 0}
+                </span>
+              </div>
+              <div className="flex flex-col w-1/3">
+                <span className="text-dark-4">Losses</span>
+                <span className="text-5xl font-bold text-white">
+                  {userStats.total_losses ? userStats.total_losses : 0}
+                </span>
+                <span className="text-dark-4">Streak</span>
+                <span className="text-xl font-bold text-white">
+                  {" "}
+                  {userStats.current_streak ? userStats.current_streak : 0}
+                </span>
+              </div>
+              <div className="flex flex-col w-1/3">
+                <span className="text-dark-4">Win-Ratio</span>
+                <span className="text-5xl font-bold text-white">
+                  {getWinRate(userStats.total_wins, userStats.total_losses)}
+                </span>
+                <span className="text-dark-4">Total tries</span>
+                <span className="text-xl font-bold text-white">
+                  {userStats.total_tries ? userStats.total_tries : 0}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex flex-col w-full py-4 px-8 bg-mass-pink rounded-4xl gap-2">
+              <span className="font-medium">Easy Mode</span>
+              <div className="flex w-full justify-between">
+                <div className="flex flex-col">
+                  <span>Wins</span>
+                  <span className="text-4xl font-bold text-mass-blue">
+                    {userStats.easy_win ? userStats.easy_win : 0}
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <span>Losses</span>
+                  <span className="text-4xl font-bold text-mass-blue">
+                    {userStats.easy_loss ? userStats.easy_loss : 0}
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <span>Win-Ratio</span>
+                  <span className="text-4xl font-bold text-mass-blue">
+                    {getWinRate(userStats.easy_win, userStats.easy_loss)}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col w-full py-4 px-8 bg-mass-pink rounded-4xl gap-2">
+              <span className="font-medium">Medium Mode</span>
+              <div className="flex w-full justify-between">
+                <div className="flex flex-col">
+                  <span>Wins</span>
+                  <span className="text-4xl font-bold text-mass-blue">
+                    {userStats.medium_win ? userStats.medium_win : 0}
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <span>Losses</span>
+                  <span className="text-4xl font-bold text-mass-blue">
+                    {userStats.medium_loss ? userStats.medium_loss : 0}
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <span>Win-Ratio</span>
+                  <span className="text-4xl font-bold text-mass-blue">
+                    {getWinRate(userStats.medium_win, userStats.medium_loss)}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col w-full py-4 px-8 bg-mass-pink rounded-4xl gap-2">
+              <span className="font-medium">Hard Mode</span>
+              <div className="flex w-full justify-between">
+                <div className="flex flex-col">
+                  <span>Wins</span>
+                  <span className="text-4xl font-bold text-mass-blue">
+                    {userStats.hard_win ? userStats.hard_win : 0}
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <span>Losses</span>
+                  <span className="text-4xl font-bold text-mass-blue">
+                    {userStats.hard_loss ? userStats.hard_loss : 0}
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <span>Win-Ratio</span>
+                  <span className="text-4xl font-bold text-mass-blue">
+                    {getWinRate(userStats.hard_win, userStats.hard_loss)}
+                  </span>
+                </div>
+              </div>
+            </div>
           </motion.div>
         </div>
       </Modal>

@@ -96,12 +96,9 @@ function WordleHard() {
 
   // Maps
 
-  const keyboard = keyboardrows.map((row) => {
+  const keyboard = keyboardrows.map((row, rowIndex) => {
     return (
-      <div
-        className="flex flex-row gap-2 justify-center w-[95vw]"
-        key={nanoid()}
-      >
+      <div className="flex flex-row gap-1 justify-center w-full" key={rowIndex}>
         {row.map((key) => {
           if (key.key === "backspace") {
             return (
@@ -407,13 +404,13 @@ function WordleHard() {
     }
   }
 
-  const [time, setTime] = useState(10);
+  const [time, setTime] = useState(59);
   const [minute, setMinute] = useState(4);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setTime((prev) => prev - 1);
-    }, 1000);
+    }, 10000);
     console.log(time);
 
     return () => clearInterval(interval);
@@ -424,38 +421,31 @@ function WordleHard() {
     setMinute((prev) => prev - 1);
   }
 
-  const timeT = new Temporal.PlainTime(0, minute, time);
-  console.log(timeT);
+  const formattedTime = `${minute}:${time < 10 ? "0" : ""}${time}`;
 
   // time muss bei unter 10 am anfang 0 erhalten
   // time muss bei 60 min++ und auf 0 gesetzt werden
   // wenn time 5:00 erreicht = game lost
 
   return (
-    <main className="flex flex-col min-w-screen h-lvh p-8 pt-20 gap-8 sm:gap-10 bg-black">
+    <main className="flex flex-col min-w-screen h-[100dvh] justify-between p-8 gap-4 sm:gap-10 bg-black">
       <Toaster position="top-center" reverseOrder={false} />
-      <Link
-        to="/"
-        className="flex justify-center items-center size-10 bg-mass-pink absolute left-8 top-4 rounded-full"
-      >
-        <X className="size-5 text-white" />
-      </Link>
-      <div className="text-4xl text-white absolute top-4 font-bold right-8 flex">
-        {timeT.minute}:
-        <div className="w-13">
-          {time < 10 ? 0 : null}
-          {timeT.second}
+      <div>
+        {" "}
+        <Link
+          to="/"
+          className="flex justify-center items-center size-10 bg-mass-pink absolute left-8 top-4 rounded-full"
+        >
+          <X className="size-5 text-white" />
+        </Link>
+        <div className="text-4xl text-white absolute top-4 font-bold right-8 flex">
+          {formattedTime}
         </div>
       </div>
-      {/* ================================= */}
+      <div className="flex flex-col gap-2">{playingBoard}</div>
+      <div className="flex flex-col gap-1">{keyboard}</div>
 
       {win ? <Confetti /> : null}
-
-      {/* ================================= */}
-      <div className="flex flex-col gap-2 justify-center">{playingBoard}</div>
-      <div className="absolute bottom-4 left-4 right-4 flex flex-col gap-2">
-        {keyboard}
-      </div>
       {win || loss ? (
         <div className="absolute inset-0 bg-black/60 flex flex-col justify-center items-center gap-2">
           <span className="text-4xl text-white font-bold">
