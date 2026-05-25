@@ -433,20 +433,20 @@ export default function Dashboard() {
             className="flex flex-col gap-2 border-t-2 pt-4 border-dark-2"
           >
             <span className="text-2xl text-black">
-              losses: {userStats.losses}
+              losses: {userStats?.losses}
             </span>
-            <span className="text-2xl text-black">wins: {userStats.wins}</span>
+            <span className="text-2xl text-black">wins: {userStats?.wins}</span>
             <span className="text-2xl text-black">
-              current streak: {userStats.current_streak}
-            </span>
-            <span className="text-2xl text-black">
-              games played: {userStats.games_played}
+              current streak: {userStats?.current_streak}
             </span>
             <span className="text-2xl text-black">
-              max streak: {userStats.max_streak}
+              games played: {userStats?.games_played}
             </span>
             <span className="text-2xl text-black">
-              total tries: {userStats.total_tries}
+              max streak: {userStats?.max_streak}
+            </span>
+            <span className="text-2xl text-black">
+              total tries: {userStats?.total_tries}
             </span>
           </motion.div>
         </div>
