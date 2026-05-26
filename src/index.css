@@ -1,5 +1,11 @@
 @import "tailwindcss";
-
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+  background: #000;
+}
 #root {
   font-family: "Kaio", "Inter", "Helvetica", sans-serif;
   background-color: black;
