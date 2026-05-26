@@ -459,7 +459,8 @@ function Wordle() {
   }
 
   return (
-    <main className="flex flex-col min-w-screen h-[100dvh] justify-between p-8 gap-4 sm:gap-10 bg-black">
+    <main className="min-h-[100dvh] w-full overflow-hidden bg-black px-3 py-4 sm:p-8 flex flex-col justify-between gap-3 sm:gap-10">
+      {" "}
       <Toaster position="top-center" reverseOrder={false} />
       <div>
         {" "}
@@ -472,7 +473,6 @@ function Wordle() {
       </div>
       <div className="flex flex-col gap-2">{playingBoard}</div>
       <div className="flex flex-col gap-1">{keyboard}</div>
-
       {win ? <Confetti /> : null}
       {win || loss ? (
         <div className="absolute inset-0 bg-black/60 flex flex-col justify-center items-center gap-2">
