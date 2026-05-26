@@ -410,7 +410,7 @@ function WordleHard() {
   useEffect(() => {
     const interval = setInterval(() => {
       setTime((prev) => prev - 1);
-    }, 10000);
+    }, 1000);
     console.log(time);
 
     return () => clearInterval(interval);

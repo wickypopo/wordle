@@ -117,12 +117,9 @@ function Wordle() {
 
   // Maps
 
-  const keyboard = keyboardrows.map((row) => {
+  const keyboard = keyboardrows.map((row, rowIndex) => {
     return (
-      <div
-        className="flex flex-row gap-2 justify-center w-[95vw]"
-        key={nanoid()}
-      >
+      <div className="flex flex-row gap-1 justify-center w-full" key={rowIndex}>
         {row.map((key) => {
           if (key.key === "backspace") {
             return (
@@ -462,23 +459,21 @@ function Wordle() {
   }
 
   return (
-    <main className="flex flex-col min-w-screen h-lvh p-8 pt-20 gap-8 sm:gap-10 bg-black">
+    <main className="flex flex-col min-w-screen h-[100dvh] justify-between p-8 gap-4 sm:gap-10 bg-black">
       <Toaster position="top-center" reverseOrder={false} />
-      <Link
-        to="/"
-        className="flex justify-center items-center size-10 bg-mass-pink absolute left-8 top-4 rounded-full"
-      >
-        <X className="size-5 text-white" />
-      </Link>
-      {/* ================================= */}
+      <div>
+        {" "}
+        <Link
+          to="/"
+          className="flex justify-center items-center size-10 bg-mass-pink absolute left-8 top-4 rounded-full"
+        >
+          <X className="size-5 text-white" />
+        </Link>
+      </div>
+      <div className="flex flex-col gap-2">{playingBoard}</div>
+      <div className="flex flex-col gap-1">{keyboard}</div>
 
       {win ? <Confetti /> : null}
-
-      {/* ================================= */}
-      <div className="flex flex-col gap-2 justify-center">{playingBoard}</div>
-      <div className="absolute bottom-4 left-4 right-4 flex flex-col gap-2">
-        {keyboard}
-      </div>
       {win || loss ? (
         <div className="absolute inset-0 bg-black/60 flex flex-col justify-center items-center gap-2">
           <span className="text-4xl text-white font-bold">

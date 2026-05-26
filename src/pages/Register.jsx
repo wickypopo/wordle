@@ -28,7 +28,7 @@ export default function Register() {
 
   return (
     <main className="flex flex-col min-w-screen min-h-screen justify-center items-center gap-8 sm:gap-10 bg-mass-pink text-white p-8">
-      <section className="flex flex-col gap-4 w-full">
+      <section className="flex flex-col gap-4 w-full md:max-w-[600px]">
         <h1 className="text-4xl font-bold">Register</h1>
         <form
           onSubmit={(e) => {
@@ -41,7 +41,7 @@ export default function Register() {
             type="username"
             name="username"
             id=""
-            placeholder="Benutzername"
+            placeholder="Username"
             className="bg-mass-blue text-white p-4 rounded-full focus:outline-4 outline-mass-lime"
           />
           <input

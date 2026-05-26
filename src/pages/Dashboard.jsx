@@ -226,97 +226,100 @@ export default function Dashboard() {
   }
   return (
     <>
-      <header className="flex justify-between items-center pt-4 px-8 bg-zinc-950">
+      <header className="flex justify-center items-center pt-4 px-8 bg-zinc-950">
         {/* <div className="size-10 rounded-full bg-zinc-100 flex items-center justify-center text-white font-bold"></div>*/}
-        <h1 className="text-white text-xl font-medium leading-none text-trim">
-          Welcome Back {user.user_metadata.username}!
-        </h1>
-        <button
-          onClick={() => setOpenSettings(!openSettings)}
-          className="cursor-pointer"
-        >
-          <Settings color="#cacaca" />
-        </button>
+        <div className="flex justify-between w-full md:max-w-[600px]">
+          <h1 className="text-white text-xl font-medium leading-none text-trim">
+            Hello {user.user_metadata.username}!
+          </h1>
+          <button
+            onClick={() => setOpenSettings(!openSettings)}
+            className="cursor-pointer"
+          >
+            <Settings color="#cacaca" />
+          </button>
+        </div>
       </header>
-      <main className="flex flex-col min-w-screen min-h-screen gap-4 sm:gap-10 bg-zinc-950 text-zinc-50 p-8 gap-8">
-        <div className="flex w-full gap-2">
-          <motion.button
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            onClick={() => setOpenLeaderboard(!openLeaderboard)}
-            className="flex w-full justify-between items-center bg-dark-4 rounded-3xl py-2 px-4 gap-2 text-black font-medium text-sm h-12 cursor-pointer"
-          >
-            <span className="leading-none trim-text">Leaderboard</span>
-            <Crown size={"20px"} className="text-mass-blue" />
-          </motion.button>
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            onClick={() => setOpenProfile(!openProfile)}
-            className="flex w-full justify-between items-center bg-dark-2 rounded-3xl py-2 px-4 gap-2 font-medium text-sm h-12 cursor-pointer"
-          >
-            <span className="leading-none trim-text">Stats</span>
-            <Star size={"20px"} className="text-mass-pink" />
-          </motion.div>
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <motion.span
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-3xl font-bold"
-          >
-            Latest games
-          </motion.span>
-
-          {displayGames.length === 0 ? (
-            <div className="flex flex-col gap-2 justify-center items-center w-full h-100 bg-dark-1 rounded-4xl">
-              <GhostIcon className="size-15 text-mass-pink" />
-              <span>{"No games yet :-("}</span>
-            </div>
-          ) : (
-            <motion.div
-              variants={gamesContainer}
-              initial="hidden"
-              animate="visible"
-              className="flex flex-col gap-2"
+      <main className="flex flex-col items-center min-w-screen min-h-screen bg-zinc-950 text-zinc-50 p-8 gap-8">
+        <div className="w-full md:max-w-[600px] flex flex-col gap-8 sm:gap-10">
+          <div className="flex w-full gap-2">
+            <motion.button
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              onClick={() => setOpenLeaderboard(!openLeaderboard)}
+              className="flex w-full justify-between items-center bg-dark-4 rounded-3xl py-2 px-4 gap-2 text-black font-medium text-sm h-12 cursor-pointer"
             >
-              {displayGames}
+              <span className="leading-none trim-text">Leaderboard</span>
+              <Crown size={"20px"} className="text-mass-blue" />
+            </motion.button>
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              onClick={() => setOpenProfile(!openProfile)}
+              className="flex w-full justify-between items-center bg-dark-2 rounded-3xl py-2 px-4 gap-2 font-medium text-sm h-12 cursor-pointer"
+            >
+              <span className="leading-none trim-text">Stats</span>
+              <Star size={"20px"} className="text-mass-pink" />
             </motion.div>
-          )}
-        </div>
+          </div>
+          <div className="flex flex-col gap-2">
+            <motion.span
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="text-3xl font-bold"
+            >
+              Latest games
+            </motion.span>
 
-        <div className="fixed bottom-0 left-0 right-0 flex px-8 pt-12 pb-8">
-          {/*<Link
+            {displayGames.length === 0 ? (
+              <div className="flex flex-col gap-2 justify-center items-center w-full h-100 bg-dark-1 rounded-4xl">
+                <GhostIcon className="size-15 text-mass-pink" />
+                <span>{"No games yet :-("}</span>
+              </div>
+            ) : (
+              <motion.div
+                variants={gamesContainer}
+                initial="hidden"
+                animate="visible"
+                className="flex flex-col gap-2"
+              >
+                {displayGames}
+              </motion.div>
+            )}
+          </div>
+          <div className="flex justify-center fixed bottom-0 left-0 right-0 flex px-8 pt-12 pb-8">
+            {/*<Link
           to="/wordle"
           className="fixed bottom-0 left-0 right-0 flex px-8 pt-12 pb-8"
         > */}
-          <motion.button
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
-            onClick={() => setOpenPlay(true)}
-            className="bg-mass-blue w-full p-4 text-xl rounded-full flex items-center justify-center shadow-xl shadow-black/30 z-20"
-          >
-            <span className="font-bold text-3xl leading-none trim-text">
-              Play
-            </span>
-          </motion.button>
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
-            onClick={() => setOpenPlay(true)}
-            className="min-h-20 min-w-20 bg-mass-pink rounded-full flex justify-center items-center shadow-xl shadow-black/30 z-20"
-          >
-            <ArrowRight size={"40px"} />
-          </motion.div>
-
-          <div className="absolute inset-0 bg-linear-to-b from-black/0 to-black/50 pointer-events-none " />
-          <div className="absolute inset-0 backdrop-blur-xl [mask-image:linear-gradient(to_bottom,transparent_10%,black_60%)] pointer-events-none " />
+            <div className="flex w-full md:max-w-[600px]">
+              <motion.button
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 }}
+                onClick={() => setOpenPlay(true)}
+                className="bg-mass-blue w-full p-4 text-xl rounded-full flex items-center justify-center shadow-xl shadow-black/30 z-20"
+              >
+                <span className="font-bold text-3xl leading-none trim-text">
+                  Play
+                </span>
+              </motion.button>
+              <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 }}
+                onClick={() => setOpenPlay(true)}
+                className="min-h-20 min-w-20 bg-mass-pink rounded-full flex justify-center items-center shadow-xl shadow-black/30 z-20"
+              >
+                <ArrowRight size={"40px"} />
+              </motion.div>
+            </div>
+            <div className="absolute inset-0 bg-linear-to-b from-black/0 to-black/50 pointer-events-none " />
+            <div className="absolute inset-0 backdrop-blur-xl [mask-image:linear-gradient(to_bottom,transparent_10%,black_60%)] pointer-events-none max-w-screen" />
+          </div>
         </div>
       </main>
       {openPlay ? (

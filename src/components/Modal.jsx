@@ -18,7 +18,7 @@ export default function Modal({ children, state, setState, variant = "pink" }) {
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", duration: 0.5 }}
-            className={`${variants[variant]} fixed top-15 left-0 right-0 -bottom-20 z-20 rounded-t-4xl flex flex-col gap-2 p-8 pb-25 overflow-y-auto`}
+            className={`${variants[variant]} fixed top-15 left-0 right-0 md:left-1/2 md:-translate-x-1/2 -bottom-20 z-20 rounded-t-4xl flex flex-col gap-2 p-8 pb-25 overflow-y-auto w-full md:max-w-[600px]`}
           >
             <X
               onClick={() => setState(!state)}

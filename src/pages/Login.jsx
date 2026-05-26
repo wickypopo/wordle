@@ -26,7 +26,7 @@ export default function Login() {
 
   return (
     <main className="flex flex-col min-w-screen min-h-screen justify-center items-center gap-8 sm:gap-10 bg-mass-pink text-zinc-50 p-8">
-      <section className="flex flex-col gap-4 w-full">
+      <section className="flex flex-col gap-4 w-full md:max-w-[600px]">
         <h1 className="text-4xl font-bold">Login</h1>
         <form onSubmit={(e) => loginUser(e)} className="flex flex-col gap-2">
           <input
