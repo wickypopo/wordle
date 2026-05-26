@@ -90,7 +90,6 @@ export default function Dashboard() {
         .maybeSingle();
 
       setUserStats(data);
-      console.log(data);
     }
     fetchData();
   }, []);
@@ -199,7 +198,6 @@ export default function Dashboard() {
     const { error } = await supabase.auth.signOut();
   }
   async function changeUserName(username) {
-    console.log(username);
     const { error } = await supabase
       .from("user_stats")
       .update({ username: username })
@@ -211,15 +209,12 @@ export default function Dashboard() {
         username: username,
       },
     });
-    console.log(data);
   }
 
   async function changeEmail(email) {
-    console.log(email);
     const { data, error } = await supabase.auth.updateUser({
       email: email,
     });
-    console.log(data, error);
   }
   async function changePassword(password) {
     const { error } = await supabase.auth.signOut();
