@@ -211,6 +211,7 @@ export default function Dashboard() {
         username: username,
       },
     });
+    console.log(data);
   }
 
   async function changeEmail(email) {
@@ -223,13 +224,12 @@ export default function Dashboard() {
   async function changePassword(password) {
     const { error } = await supabase.auth.signOut();
   }
-
   return (
     <>
-      <header className="flex justify-between pt-4 px-8 bg-zinc-950">
+      <header className="flex justify-between items-center pt-4 px-8 bg-zinc-950">
         {/* <div className="size-10 rounded-full bg-zinc-100 flex items-center justify-center text-white font-bold"></div>*/}
-        <h1 className="text-white text-2xl font-bold leading-none text-trim">
-          Wordle
+        <h1 className="text-white text-xl font-medium leading-none text-trim">
+          Welcome Back {user.user_metadata.username}!
         </h1>
         <button
           onClick={() => setOpenSettings(!openSettings)}

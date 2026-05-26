@@ -7,17 +7,17 @@ const AuthContext = createContext();
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const { data } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log(session);
+      console.log(event);
       if (event === "INITIAL_SESSION") {
         // handle initial session
       } else if (event === "SIGNED_IN") {
         setLoading(false);
         setUser(session?.user ?? null);
       } else if (event === "SIGNED_OUT") {
-        navigate("/login");
         setUser(null);
         setLoading(false);
       } else if (event === "PASSWORD_RECOVERY") {

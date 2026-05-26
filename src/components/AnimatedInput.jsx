@@ -46,7 +46,7 @@ export default function AnimatedInput({
       >
         {placeholder}
       </label>
-      <motion.form className="relative flex h-14 w-full overflow-hidden rounded-full">
+      <motion.div className="relative flex h-14 w-full overflow-hidden rounded-full">
         <motion.input
           variants={inputAnimation}
           initial="input"
@@ -77,7 +77,7 @@ export default function AnimatedInput({
         >
           <Check />
         </motion.button>
-      </motion.form>
+      </motion.div>
     </motion.div>
   );
 }
