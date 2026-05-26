@@ -126,7 +126,7 @@ function Wordle() {
               <button
                 className={
                   key.key +
-                  " flex justify-center items-center text-white sm:w-20 h-14 bg-mass-pink rounded-xl leading-none trim-text px-2"
+                  " flex-[1.5] min-w-0 flex justify-center items-center text-white sm:w-20 h-12 sm:h-14 bg-mass-pink rounded-lg sm:rounded-xl leading-none trim-text px-1 sm:px-2"
                 }
                 onClick={() => handleKeyboardDelete()}
                 key={nanoid()}
@@ -139,7 +139,7 @@ function Wordle() {
               <button
                 className={
                   key.key +
-                  " text-white sm:w-20 h-14 bg-mass-pink rounded-xl leading-none trim-text font-bold text-xs sm:text-[16px] px-2"
+                  " text-white flex-[1.5] min-w-0 sm:w-20 h-12 sm:h-14 bg-mass-pink rounded-lg sm:rounded-xl leading-none trim-text font-bold text-[10px] sm:text-[16px] px-1 sm:px-2"
                 }
                 onClick={() => handleKeyboardSubmit(key.key)}
                 key={nanoid()}
@@ -152,7 +152,7 @@ function Wordle() {
               <button
                 className={
                   key.status +
-                  " text-white w-full sm:w-14 h-14 bg-dark-3 rounded-xl leading-none trim-text font-bold"
+                  " text-white flex-1 min-w-0 h-12 sm:h-14 bg-dark-3 rounded-lg sm:rounded-xl leading-none trim-text font-bold text-sm sm:text-base"
                 }
                 onClick={() => handleKeyboard(key.key)}
                 key={nanoid()}
@@ -167,7 +167,7 @@ function Wordle() {
   });
 
   const playingBoard = rows.map((row) => (
-    <div className="flex justify-center gap-2 w-full h-full" key={nanoid()}>
+    <div className="flex justify-center gap-1.5 sm:gap-2 w-full" key={nanoid()}>
       {row.map((cell) => (
         <div
           className={
@@ -460,22 +460,29 @@ function Wordle() {
 
   return (
     <main className="min-h-[100dvh] w-full overflow-hidden bg-black px-3 py-4 sm:p-8 flex flex-col justify-between gap-3 sm:gap-10">
-      {" "}
       <Toaster position="top-center" reverseOrder={false} />
+
       <div>
-        {" "}
         <Link
           to="/"
-          className="flex justify-center items-center size-10 bg-mass-pink absolute left-8 top-4 rounded-full"
+          className="flex justify-center items-center size-10 bg-mass-pink absolute left-4 top-4 sm:left-8 sm:top-4 rounded-full"
         >
           <X className="size-5 text-white" />
         </Link>
       </div>
-      <div className="flex flex-col gap-2">{playingBoard}</div>
-      <div className="flex flex-col gap-1">{keyboard}</div>
+
+      <div className="w-full max-w-[360px] mx-auto flex flex-col gap-1.5 sm:gap-2">
+        {playingBoard}
+      </div>
+
+      <div className="w-full max-w-[520px] mx-auto flex flex-col gap-1">
+        {keyboard}
+      </div>
+
       {win ? <Confetti /> : null}
+
       {win || loss ? (
-        <div className="absolute inset-0 bg-black/60 flex flex-col justify-center items-center gap-2">
+        <div className="absolute inset-0 bg-black/60 flex flex-col justify-center items-center gap-2 px-4">
           <span className="text-4xl text-white font-bold">
             You {win ? "Won" : "Lost"}
           </span>
