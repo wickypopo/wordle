@@ -435,45 +435,45 @@ export default function Dashboard() {
         </div>
       </Modal>
       <Modal variant="blue" state={openProfile} setState={setOpenProfile}>
-        <h2 className="text-4xl text-black font-bold">Stats</h2>
+        <h2 className="text-white text-4xl text-black font-bold">Stats</h2>
         <div className="flex flex-col h-full justify-between">
           <motion.div
             initial="closed"
             variants={staggerContainer}
             animate="open"
-            className="flex flex-col gap-2 border-t-2 pt-4 border-dark-2"
+            className="flex flex-col gap-2 border-t-2 border-dark-4 pt-4 border-dark-2"
           >
             <div className="flex w-full justify-between">
               <div className="flex flex-col w-1/3">
                 <span className="text-dark-4">Wins</span>
                 <span className="text-5xl font-bold text-white">
                   {" "}
-                  {userStats.total_wins ? userStats.total_wins : 0}
+                  {userStats?.total_wins ? userStats?.total_wins : 0}
                 </span>
                 <span className="text-dark-4">Games</span>
                 <span className="text-xl font-bold text-white">
-                  {userStats.games_played ? userStats.games_played : 0}
+                  {userStats?.games_played ? userStats?.games_played : 0}
                 </span>
               </div>
               <div className="flex flex-col w-1/3">
                 <span className="text-dark-4">Losses</span>
                 <span className="text-5xl font-bold text-white">
-                  {userStats.total_losses ? userStats.total_losses : 0}
+                  {userStats?.total_losses ? userStats?.total_losses : 0}
                 </span>
                 <span className="text-dark-4">Streak</span>
                 <span className="text-xl font-bold text-white">
                   {" "}
-                  {userStats.current_streak ? userStats.current_streak : 0}
+                  {userStats?.current_streak ? userStats?.current_streak : 0}
                 </span>
               </div>
               <div className="flex flex-col w-1/3">
                 <span className="text-dark-4">Win-Ratio</span>
                 <span className="text-5xl font-bold text-white">
-                  {getWinRate(userStats.total_wins, userStats.total_losses)}
+                  {getWinRate(userStats?.total_wins, userStats?.total_losses)}
                 </span>
                 <span className="text-dark-4">Total tries</span>
                 <span className="text-xl font-bold text-white">
-                  {userStats.total_tries ? userStats.total_tries : 0}
+                  {userStats?.total_tries ? userStats?.total_tries : 0}
                 </span>
               </div>
             </div>
@@ -483,20 +483,20 @@ export default function Dashboard() {
               <div className="flex w-full justify-between">
                 <div className="flex flex-col">
                   <span>Wins</span>
-                  <span className="text-4xl font-bold text-mass-blue">
-                    {userStats.easy_win ? userStats.easy_win : 0}
+                  <span className="text-4xl font-bold text-white">
+                    {userStats?.easy_win ? userStats?.easy_win : 0}
                   </span>
                 </div>
                 <div className="flex flex-col">
                   <span>Losses</span>
-                  <span className="text-4xl font-bold text-mass-blue">
-                    {userStats.easy_loss ? userStats.easy_loss : 0}
+                  <span className="text-4xl font-bold text-white">
+                    {userStats?.easy_loss ? userStats?.easy_loss : 0}
                   </span>
                 </div>
                 <div className="flex flex-col">
                   <span>Win-Ratio</span>
-                  <span className="text-4xl font-bold text-mass-blue">
-                    {getWinRate(userStats.easy_win, userStats.easy_loss)}
+                  <span className="text-4xl font-bold text-white">
+                    {getWinRate(userStats?.easy_win, userStats?.easy_loss)}
                   </span>
                 </div>
               </div>
@@ -506,20 +506,20 @@ export default function Dashboard() {
               <div className="flex w-full justify-between">
                 <div className="flex flex-col">
                   <span>Wins</span>
-                  <span className="text-4xl font-bold text-mass-blue">
-                    {userStats.medium_win ? userStats.medium_win : 0}
+                  <span className="text-4xl font-bold text-white">
+                    {userStats?.medium_win ? userStats?.medium_win : 0}
                   </span>
                 </div>
                 <div className="flex flex-col">
                   <span>Losses</span>
-                  <span className="text-4xl font-bold text-mass-blue">
-                    {userStats.medium_loss ? userStats.medium_loss : 0}
+                  <span className="text-4xl font-bold text-white">
+                    {userStats?.medium_loss ? userStats?.medium_loss : 0}
                   </span>
                 </div>
                 <div className="flex flex-col">
                   <span>Win-Ratio</span>
-                  <span className="text-4xl font-bold text-mass-blue">
-                    {getWinRate(userStats.medium_win, userStats.medium_loss)}
+                  <span className="text-4xl font-bold text-white">
+                    {getWinRate(userStats?.medium_win, userStats?.medium_loss)}
                   </span>
                 </div>
               </div>
@@ -529,20 +529,20 @@ export default function Dashboard() {
               <div className="flex w-full justify-between">
                 <div className="flex flex-col">
                   <span>Wins</span>
-                  <span className="text-4xl font-bold text-mass-blue">
-                    {userStats.hard_win ? userStats.hard_win : 0}
+                  <span className="text-4xl font-bold text-white">
+                    {userStats?.hard_win ? userStats?.hard_win : 0}
                   </span>
                 </div>
                 <div className="flex flex-col">
                   <span>Losses</span>
-                  <span className="text-4xl font-bold text-mass-blue">
-                    {userStats.hard_loss ? userStats.hard_loss : 0}
+                  <span className="text-4xl font-bold text-white">
+                    {userStats?.hard_loss ? userStats?.hard_loss : 0}
                   </span>
                 </div>
                 <div className="flex flex-col">
                   <span>Win-Ratio</span>
-                  <span className="text-4xl font-bold text-mass-blue">
-                    {getWinRate(userStats.hard_win, userStats.hard_loss)}
+                  <span className="text-4xl font-bold text-white">
+                    {getWinRate(userStats?.hard_win, userStats?.hard_loss)}
                   </span>
                 </div>
               </div>

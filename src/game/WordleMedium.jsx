@@ -294,7 +294,7 @@ function WordleMedium() {
       return;
     }
 
-    if (round === 3 && randomWord !== jointWord) {
+    if (round === 4 && randomWord !== jointWord) {
       const { error } = await supabase.from("game_history").insert({
         username: user.user_metadata.username ?? "Unknown",
         word: randomWord,
