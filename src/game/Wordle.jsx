@@ -126,7 +126,7 @@ function Wordle() {
               <button
                 className={
                   key.key +
-                  " flex-[1.5] min-w-0 flex justify-center items-center text-white sm:w-20 h-12 sm:h-14 bg-mass-pink rounded-lg sm:rounded-xl leading-none trim-text px-1 sm:px-2"
+                  " flex-[1.5] min-w-0 flex justify-center items-center text-white sm:w-20 h-14 sm:h-14 bg-mass-pink rounded-lg sm:rounded-xl leading-none trim-text px-1 sm:px-2"
                 }
                 onClick={() => handleKeyboardDelete()}
                 key={nanoid()}
@@ -139,7 +139,7 @@ function Wordle() {
               <button
                 className={
                   key.key +
-                  " text-white flex-[1.5] min-w-0 sm:w-20 h-12 sm:h-14 bg-mass-pink rounded-lg sm:rounded-xl leading-none trim-text font-bold text-[10px] sm:text-[16px] px-1 sm:px-2"
+                  " text-white flex-[1.5] min-w-0 sm:w-20 h-14 sm:h-14 bg-mass-pink rounded-lg sm:rounded-xl leading-none trim-text font-bold text-[10px] sm:text-[16px] px-1 sm:px-2"
                 }
                 onClick={() => handleKeyboardSubmit(key.key)}
                 key={nanoid()}
@@ -152,7 +152,7 @@ function Wordle() {
               <button
                 className={
                   key.status +
-                  " text-white flex-1 min-w-0 h-12 sm:h-14 bg-dark-3 rounded-lg sm:rounded-xl leading-none trim-text font-bold text-sm sm:text-base"
+                  " text-white flex-1 min-w-0 h-14 sm:h-14 bg-dark-3 rounded-lg sm:rounded-xl leading-none trim-text font-bold text-sm sm:text-base"
                 }
                 onClick={() => handleKeyboard(key.key)}
                 key={nanoid()}
@@ -166,13 +166,13 @@ function Wordle() {
     );
   });
 
-  const playingBoard = rows.map((row) => (
-    <div className="flex justify-center gap-1.5 sm:gap-2 w-full" key={nanoid()}>
+  const playingBoard = rows.map((row, rowIndex) => (
+    <div className="flex justify-center gap-1.5 sm:gap-2 w-full" key={rowIndex}>
       {row.map((cell) => (
         <div
           className={
             cell.status +
-            " flex justify-center items-center text-white text-xl font-bold h-15 w-15 border-2 border-zinc-800 rounded-xl"
+            " flex justify-center items-center text-white text-xl font-bold size-full aspect-square border-2 border-dark-2 rounded-xl"
           }
           key={cell.id}
           id={cell.id}

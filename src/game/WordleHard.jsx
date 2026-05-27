@@ -107,7 +107,7 @@ function WordleHard() {
               <button
                 className={
                   key.key +
-                  " flex-[1.5] min-w-0 flex justify-center items-center text-white sm:w-20 h-12 sm:h-14 bg-mass-pink rounded-lg sm:rounded-xl leading-none trim-text px-1 sm:px-2"
+                  " flex-[1.5] min-w-0 flex justify-center items-center text-white sm:w-20 h-14 sm:h-14 bg-mass-pink rounded-lg sm:rounded-xl leading-none trim-text px-1 sm:px-2"
                 }
                 onClick={() => handleKeyboardDelete()}
                 key={nanoid()}
@@ -120,7 +120,7 @@ function WordleHard() {
               <button
                 className={
                   key.key +
-                  " text-white flex-[1.5] min-w-0 sm:w-20 h-12 sm:h-14 bg-mass-pink rounded-lg sm:rounded-xl leading-none trim-text font-bold text-[10px] sm:text-[16px] px-1 sm:px-2"
+                  " text-white flex-[1.5] min-w-0 sm:w-20 h-14 sm:h-14 bg-mass-pink rounded-lg sm:rounded-xl leading-none trim-text font-bold text-[10px] sm:text-[16px] px-1 sm:px-2"
                 }
                 onClick={() => handleKeyboardSubmit(key.key)}
                 key={nanoid()}
@@ -133,7 +133,7 @@ function WordleHard() {
               <button
                 className={
                   key.status +
-                  " text-white flex-1 min-w-0 h-12 sm:h-14 bg-dark-3 rounded-lg sm:rounded-xl leading-none trim-text font-bold text-sm sm:text-base"
+                  " text-white flex-1 min-w-0 h-14 sm:h-14 bg-dark-3 rounded-lg sm:rounded-xl leading-none trim-text font-bold text-sm sm:text-base"
                 }
                 onClick={() => handleKeyboard(key.key)}
                 key={nanoid()}
@@ -167,22 +167,9 @@ function WordleHard() {
   // Keyboard functionality
 
   function handleKeyboard(key) {
-    if (round === 1 && currentCellIndex === 5) {
-      return toast.error("You need to submit first");
-    }
-    if (round === 2 && currentCellIndex === 10) {
-      return toast.error("You need to submit first");
-    }
-    if (round === 3 && currentCellIndex === 15) {
-      return toast.error("You need to submit first");
-    }
-    if (round === 4 && currentCellIndex === 20) {
-      return toast.error("You need to submit first");
-    }
-    if (round === 5 && currentCellIndex === 25) {
-      return toast.error("You need to submit first");
-    }
-    if (round === 6 && currentCellIndex === 30) {
+    const maxCellsThisRound = round * 5;
+
+    if (currentCellIndex === maxCellsThisRound) {
       return toast.error("You need to submit first");
     }
 
@@ -202,13 +189,9 @@ function WordleHard() {
   }
 
   function handleKeyboardDelete() {
-    if (currentCellIndex === 0) {
-      return toast.error("Nothing to delete");
-    }
-    if (round === 2 && currentCellIndex === 5) {
-      return toast.error("Nothing to delete");
-    }
-    if (round === 3 && currentCellIndex === 10) {
+    const firstCellOfRound = (round - 1) * 5;
+
+    if (currentCellIndex === firstCellOfRound) {
       return toast.error("Nothing to delete");
     }
 
@@ -388,8 +371,8 @@ function WordleHard() {
       const { data, error } = await supabase
         .from("user_stats")
         .update({
-          total_wins: win ? stats[0].wins + 1 : stats[0].wins,
-          total_losses: win ? stats[0].losses : stats[0].losses + 1,
+          total_wins: win ? stats[0].total_wins + 1 : stats[0].total_wins,
+          total_losses: win ? stats[0].total_losses : stats[0].total_losses + 1,
           games_played: stats[0].games_played + 1,
           current_streak: newCurrentStreak,
           max_streak: newMaxStreak,
@@ -413,31 +396,35 @@ function WordleHard() {
     return () => clearInterval(interval);
   }, []);
 
-  if (time == 0 && minute === 0) {
-    async function checkLoss() {
-      const { error } = await supabase.from("game_history").insert({
-        username: user.user_metadata.username ?? "Unknown",
-        word: randomWord,
-        tries: round,
-        win: false,
-        user_id: user.id,
-      });
-      await saveGameStats({ win: false });
-      setLoss(true);
+  useEffect(() => {
+    if (loss || win) return;
+    if (!user) return;
 
-      if (error) {
-        toast.error("something went wrong");
-        return;
+    if (minute === 0 && time === 0) {
+      async function checkLoss() {
+        const { error } = await supabase.from("game_history").insert({
+          username: user.user_metadata.username ?? "Unknown",
+          word: randomWord,
+          tries: round,
+          win: false,
+          user_id: user.id,
+        });
+        await saveGameStats({ win: false });
+        setLoss(true);
+
+        if (error) {
+          toast.error("something went wrong");
+          return;
+        }
       }
+
+      checkLoss();
     }
-
-    checkLoss();
-  }
-
-  if (time === 0) {
-    setTime(59);
-    setMinute((prev) => prev - 1);
-  }
+    if (time === 0) {
+      setTime(59);
+      setMinute((prev) => prev - 1);
+    }
+  }, [time, minute, user, randomWord, round]);
 
   const formattedTime = `${minute}:${time < 10 ? "0" : ""}${time}`;
 
@@ -457,7 +444,7 @@ function WordleHard() {
         </div>
       </div>
 
-      <div className="w-full max-w-[600px] mx-auto flex flex-col gap-1.5 sm:gap-2">
+      <div className="w-full max-w-[400px] mx-auto flex flex-col gap-1.5 sm:gap-2">
         {playingBoard}
       </div>
 
@@ -468,7 +455,7 @@ function WordleHard() {
       {win ? <Confetti /> : null}
 
       {win || loss ? (
-        <div className="absolute inset-0 bg-black/60 flex flex-col justify-center items-center gap-2 px-4">
+        <div className="absolute inset-0 bg-black/80 flex flex-col justify-center items-center gap-2 px-4">
           <span className="text-4xl text-white font-bold">
             You {win ? "Won" : "Lost"}
           </span>

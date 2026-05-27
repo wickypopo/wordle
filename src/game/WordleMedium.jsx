@@ -96,6 +96,8 @@ function WordleMedium() {
   const [keyboardrows, setKeyboardRows] = useState(keyboardRowsData);
   const [win, setWin] = useState(false);
   const [loss, setLoss] = useState(false);
+  const [time, setTime] = useState(59);
+  const [minute, setMinute] = useState(11);
 
   const [round, setRound] = useState(1);
 
@@ -112,7 +114,7 @@ function WordleMedium() {
               <button
                 className={
                   key.key +
-                  " flex-[1.5] min-w-0 flex justify-center items-center text-white sm:w-20 h-12 sm:h-14 bg-mass-pink rounded-lg sm:rounded-xl leading-none trim-text px-1 sm:px-2"
+                  " flex-[1.5] min-w-0 flex justify-center items-center text-white sm:w-20 h-14 sm:h-14 bg-mass-pink rounded-lg sm:rounded-xl leading-none trim-text px-1 sm:px-2"
                 }
                 onClick={() => handleKeyboardDelete()}
                 key={nanoid()}
@@ -125,7 +127,7 @@ function WordleMedium() {
               <button
                 className={
                   key.key +
-                  " text-white flex-[1.5] min-w-0 sm:w-20 h-12 sm:h-14 bg-mass-pink rounded-lg sm:rounded-xl leading-none trim-text font-bold text-[10px] sm:text-[16px] px-1 sm:px-2"
+                  " text-white flex-[1.5] min-w-0 sm:w-20 h-14 sm:h-14 bg-mass-pink rounded-lg sm:rounded-xl leading-none trim-text font-bold text-[10px] sm:text-[16px] px-1 sm:px-2"
                 }
                 onClick={() => handleKeyboardSubmit(key.key)}
                 key={nanoid()}
@@ -138,7 +140,7 @@ function WordleMedium() {
               <button
                 className={
                   key.status +
-                  " text-white flex-1 min-w-0 h-12 sm:h-14 bg-dark-3 rounded-lg sm:rounded-xl leading-none trim-text font-bold text-sm sm:text-base"
+                  " text-white flex-1 min-w-0 h-14 sm:h-14 bg-dark-3 rounded-lg sm:rounded-xl leading-none trim-text font-bold text-sm sm:text-base"
                 }
                 onClick={() => handleKeyboard(key.key)}
                 key={nanoid()}
@@ -152,13 +154,13 @@ function WordleMedium() {
     );
   });
 
-  const playingBoard = rows.map((row) => (
-    <div className="flex justify-center gap-1.5 sm:gap-2 w-full" key={nanoid()}>
+  const playingBoard = rows.map((row, rowIndex) => (
+    <div className="flex justify-center gap-1.5 sm:gap-2 w-full" key={rowIndex}>
       {row.map((cell) => (
         <div
           className={
             cell.status +
-            " flex justify-center items-center text-white text-xl font-bold h-15 w-15 border-2 border-zinc-800 rounded-xl"
+            " flex justify-center items-center text-white text-xl font-bold size-full aspect-square border-2 border-dark-2 rounded-xl"
           }
           key={cell.id}
           id={cell.id}
@@ -172,16 +174,9 @@ function WordleMedium() {
   // Keyboard functionality
 
   function handleKeyboard(key) {
-    if (round === 1 && currentCellIndex === 5) {
-      return toast.error("You need to submit first");
-    }
-    if (round === 2 && currentCellIndex === 10) {
-      return toast.error("You need to submit first");
-    }
-    if (round === 3 && currentCellIndex === 15) {
-      return toast.error("You need to submit first");
-    }
-    if (round === 4 && currentCellIndex === 20) {
+    const maxCellsThisRound = round * 5;
+
+    if (currentCellIndex === maxCellsThisRound) {
       return toast.error("You need to submit first");
     }
 
@@ -201,16 +196,9 @@ function WordleMedium() {
   }
 
   function handleKeyboardDelete() {
-    if (currentCellIndex === 0) {
-      return toast.error("Nothing to delete");
-    }
-    if (round === 2 && currentCellIndex === 5) {
-      return toast.error("Nothing to delete");
-    }
-    if (round === 3 && currentCellIndex === 10) {
-      return toast.error("Nothing to delete");
-    }
-    if (round === 4 && currentCellIndex === 15) {
+    const firstCellOfRound = (round - 1) * 5;
+
+    if (currentCellIndex === firstCellOfRound) {
       return toast.error("Nothing to delete");
     }
 
@@ -281,30 +269,6 @@ function WordleMedium() {
 
     setRows(newRows);
 
-    setKeyboardRows((prevRows) =>
-      prevRows.map((row) =>
-        row.map((key) => {
-          const matchingCells = newRows
-            .flat()
-            .filter((cell) => cell?.letter?.toLowerCase() === key.key);
-
-          if (matchingCells.some((cell) => cell.status === "correct")) {
-            return { ...key, status: "key-correct" };
-          }
-
-          if (matchingCells.some((cell) => cell.status === "exist")) {
-            return { ...key, status: "key-exist" };
-          }
-
-          if (matchingCells.some((cell) => cell.status === "false")) {
-            return { ...key, status: "key-false" };
-          }
-
-          return key;
-        }),
-      ),
-    );
-
     setWord([]);
 
     if (randomWord === jointWord) {
@@ -317,7 +281,6 @@ function WordleMedium() {
         tries: round,
         win: true,
         user_id: user.id,
-        gamemode: "medium",
       });
 
       setWin(true);
@@ -331,14 +294,13 @@ function WordleMedium() {
       return;
     }
 
-    if (round === 4 && randomWord !== jointWord) {
+    if (round === 3 && randomWord !== jointWord) {
       const { error } = await supabase.from("game_history").insert({
         username: user.user_metadata.username ?? "Unknown",
         word: randomWord,
         tries: round,
         win: false,
         user_id: user.id,
-        gamemode: "medium",
       });
       await saveGameStats({ win: false });
       setLoss(true);
@@ -360,6 +322,8 @@ function WordleMedium() {
     setCurrentCellIndex(0);
     setWin(false);
     setLoss(false);
+    setTime(59);
+    setMinute(5);
     setRows((prevRow) =>
       prevRow.map((row) =>
         row.map((cell) => ({ ...cell, letter: null, status: null })),
@@ -404,8 +368,6 @@ function WordleMedium() {
         current_streak: win ? 1 : 0,
         max_streak: win ? 1 : 0,
         total_tries: round,
-        medium_win: win ? 1 : 0,
-        medium_loss: win ? 0 : 1,
       });
     } else {
       const newCurrentStreak = win ? stats[0].current_streak + 1 : 0;
@@ -422,8 +384,6 @@ function WordleMedium() {
           current_streak: newCurrentStreak,
           max_streak: newMaxStreak,
           total_tries: stats[0].total_tries + round,
-          medium_win: win ? stats[0].medium_win + 1 : stats[0].medium_win,
-          medium_loss: win ? stats[0].medium_loss : stats[0].medium_loss + 1,
         })
         .eq("user_id", user.id)
         .select("*");
@@ -435,31 +395,74 @@ function WordleMedium() {
     }
   }
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    if (loss || win) return;
+    if (!user) return;
+
+    if (minute === 0 && time === 0) {
+      async function checkLoss() {
+        const { error } = await supabase.from("game_history").insert({
+          username: user.user_metadata.username ?? "Unknown",
+          word: randomWord,
+          tries: round,
+          win: false,
+          user_id: user.id,
+        });
+        await saveGameStats({ win: false });
+        setLoss(true);
+
+        if (error) {
+          toast.error("something went wrong");
+          return;
+        }
+      }
+
+      checkLoss();
+    }
+    if (time === 0) {
+      setTime(59);
+      setMinute((prev) => prev - 1);
+    }
+  }, [time, minute, user, randomWord, round]);
+
+  const formattedTime = `${minute}:${time < 10 ? "0" : ""}${time}`;
+
   return (
-    <main className="min-h-[100dvh] w-full overflow-hidden bg-black px-3 py-4 sm:p-8 flex flex-col justify-between gap-3 sm:gap-10">
+    <main className="min-h-[100dvh] w-full overflow-hidden bg-black px-3 py-4 sm:p-8 flex flex-col justify-between items-center gap-3 sm:gap-10">
       <Toaster position="top-center" reverseOrder={false} />
 
-      <div>
+      <div className="flex justify-between w-full max-w-[600px]">
         <Link
           to="/"
-          className="flex justify-center items-center size-10 bg-mass-pink absolute left-4 top-4 sm:left-8 sm:top-4 rounded-full"
+          className="flex justify-center items-center size-10 bg-mass-pink rounded-full"
         >
           <X className="size-5 text-white" />
         </Link>
+        <div className="text-4xl text-white font-bold flex">
+          {minute === -1 ? "0:00" : formattedTime}
+        </div>
       </div>
 
-      <div className="w-full max-w-[360px] mx-auto flex flex-col gap-1.5 sm:gap-2">
+      <div className="w-full max-w-[400px] mx-auto flex flex-col gap-1.5 sm:gap-2">
         {playingBoard}
       </div>
 
-      <div className="w-full max-w-[520px] mx-auto flex flex-col gap-1">
+      <div className="w-full max-w-[600px] mx-auto flex flex-col gap-1">
         {keyboard}
       </div>
 
       {win ? <Confetti /> : null}
 
       {win || loss ? (
-        <div className="absolute inset-0 bg-black/60 flex flex-col justify-center items-center gap-2 px-4">
+        <div className="absolute inset-0 bg-black/80 flex flex-col justify-center items-center gap-2 px-4">
           <span className="text-4xl text-white font-bold">
             You {win ? "Won" : "Lost"}
           </span>
