@@ -89,8 +89,8 @@ function WordleHard() {
   const [keyboardrows, setKeyboardRows] = useState(keyboardRowsData);
   const [win, setWin] = useState(false);
   const [loss, setLoss] = useState(false);
-  const [time, setTime] = useState(9);
-  const [minute, setMinute] = useState(0);
+  const [time, setTime] = useState(59);
+  const [minute, setMinute] = useState(5);
 
   const [round, setRound] = useState(1);
 
@@ -147,13 +147,13 @@ function WordleHard() {
     );
   });
 
-  const playingBoard = rows.map((row) => (
-    <div className="flex justify-center gap-1.5 sm:gap-2 w-full" key={nanoid()}>
+  const playingBoard = rows.map((row, rowIndex) => (
+    <div className="flex justify-center gap-1.5 sm:gap-2 w-full" key={rowIndex}>
       {row.map((cell) => (
         <div
           className={
             cell.status +
-            " flex justify-center items-center text-white text-xl font-bold h-15 w-15 border-2 border-zinc-800 rounded-xl"
+            " flex justify-center items-center text-white text-xl font-bold size-full aspect-square border-2 border-dark-2 rounded-xl"
           }
           key={cell.id}
           id={cell.id}
@@ -442,26 +442,26 @@ function WordleHard() {
   const formattedTime = `${minute}:${time < 10 ? "0" : ""}${time}`;
 
   return (
-    <main className="min-h-[100dvh] w-full overflow-hidden bg-black px-3 py-4 sm:p-8 flex flex-col justify-between gap-3 sm:gap-10">
+    <main className="min-h-[100dvh] w-full overflow-hidden bg-black px-3 py-4 sm:p-8 flex flex-col justify-between items-center gap-3 sm:gap-10">
       <Toaster position="top-center" reverseOrder={false} />
 
-      <div>
+      <div className="flex justify-between w-full max-w-[600px]">
         <Link
           to="/"
-          className="flex justify-center items-center size-10 bg-mass-pink absolute left-4 top-4 sm:left-8 sm:top-4 rounded-full"
+          className="flex justify-center items-center size-10 bg-mass-pink rounded-full"
         >
           <X className="size-5 text-white" />
         </Link>
-        <div className="text-4xl text-white absolute top-4 font-bold right-8 flex">
+        <div className="text-4xl text-white font-bold flex">
           {minute === -1 ? "0:00" : formattedTime}
         </div>
       </div>
 
-      <div className="w-full max-w-[360px] mx-auto flex flex-col gap-1.5 sm:gap-2">
+      <div className="w-full max-w-[600px] mx-auto flex flex-col gap-1.5 sm:gap-2">
         {playingBoard}
       </div>
 
-      <div className="w-full max-w-[520px] mx-auto flex flex-col gap-1">
+      <div className="w-full max-w-[600px] mx-auto flex flex-col gap-1">
         {keyboard}
       </div>
 
