@@ -1,7 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
-import { supabase } from "./utils/supabase";
 import { Toaster } from "react-hot-toast";
 import Wordle from "./game/Wordle";
 import ProtectedRoute from "./lib/ProtectedRoute";
