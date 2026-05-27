@@ -89,6 +89,8 @@ function WordleHard() {
   const [keyboardrows, setKeyboardRows] = useState(keyboardRowsData);
   const [win, setWin] = useState(false);
   const [loss, setLoss] = useState(false);
+  const [time, setTime] = useState(9);
+  const [minute, setMinute] = useState(0);
 
   const [round, setRound] = useState(1);
 
@@ -302,10 +304,7 @@ function WordleHard() {
       return;
     }
 
-    if (
-      (round === 3 && randomWord !== jointWord) ||
-      (time == 0 && minute === 0)
-    ) {
+    if (round === 3 && randomWord !== jointWord) {
       const { error } = await supabase.from("game_history").insert({
         username: user.user_metadata.username ?? "Unknown",
         word: randomWord,
@@ -333,6 +332,8 @@ function WordleHard() {
     setCurrentCellIndex(0);
     setWin(false);
     setLoss(false);
+    setTime(59);
+    setMinute(5);
     setRows((prevRow) =>
       prevRow.map((row) =>
         row.map((cell) => ({ ...cell, letter: null, status: null })),
@@ -371,8 +372,8 @@ function WordleHard() {
       const { data, error } = await supabase.from("user_stats").insert({
         username: user.user_metadata.username,
         user_id: user.id,
-        wins: win ? 1 : 0,
-        losses: win ? 0 : 1,
+        total_wins: win ? 1 : 0,
+        total_losses: win ? 0 : 1,
         games_played: 1,
         current_streak: win ? 1 : 0,
         max_streak: win ? 1 : 0,
@@ -387,8 +388,8 @@ function WordleHard() {
       const { data, error } = await supabase
         .from("user_stats")
         .update({
-          wins: win ? stats[0].wins + 1 : stats[0].wins,
-          losses: win ? stats[0].losses : stats[0].losses + 1,
+          total_wins: win ? stats[0].wins + 1 : stats[0].wins,
+          total_losses: win ? stats[0].losses : stats[0].losses + 1,
           games_played: stats[0].games_played + 1,
           current_streak: newCurrentStreak,
           max_streak: newMaxStreak,
@@ -404,17 +405,34 @@ function WordleHard() {
     }
   }
 
-  const [time, setTime] = useState(59);
-  const [minute, setMinute] = useState(4);
-
   useEffect(() => {
     const interval = setInterval(() => {
       setTime((prev) => prev - 1);
     }, 1000);
-    console.log(time);
 
     return () => clearInterval(interval);
   }, []);
+
+  if (time == 0 && minute === 0) {
+    async function checkLoss() {
+      const { error } = await supabase.from("game_history").insert({
+        username: user.user_metadata.username ?? "Unknown",
+        word: randomWord,
+        tries: round,
+        win: false,
+        user_id: user.id,
+      });
+      await saveGameStats({ win: false });
+      setLoss(true);
+
+      if (error) {
+        toast.error("something went wrong");
+        return;
+      }
+    }
+
+    checkLoss();
+  }
 
   if (time === 0) {
     setTime(59);
@@ -422,10 +440,6 @@ function WordleHard() {
   }
 
   const formattedTime = `${minute}:${time < 10 ? "0" : ""}${time}`;
-
-  // time muss bei unter 10 am anfang 0 erhalten
-  // time muss bei 60 min++ und auf 0 gesetzt werden
-  // wenn time 5:00 erreicht = game lost
 
   return (
     <main className="min-h-[100dvh] w-full overflow-hidden bg-black px-3 py-4 sm:p-8 flex flex-col justify-between gap-3 sm:gap-10">
@@ -439,7 +453,7 @@ function WordleHard() {
           <X className="size-5 text-white" />
         </Link>
         <div className="text-4xl text-white absolute top-4 font-bold right-8 flex">
-          {formattedTime}
+          {minute === -1 ? "0:00" : formattedTime}
         </div>
       </div>
 

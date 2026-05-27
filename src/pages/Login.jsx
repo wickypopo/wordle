@@ -16,11 +16,12 @@ export default function Login() {
       password: password,
     });
 
-    if (data.session) {
-      navigate("/");
-    }
     if (error) {
       toast.error(error.message);
+    }
+
+    if (data.session) {
+      navigate("/");
     }
   }
 
