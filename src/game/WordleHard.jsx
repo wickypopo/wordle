@@ -361,6 +361,8 @@ function WordleHard() {
         current_streak: win ? 1 : 0,
         max_streak: win ? 1 : 0,
         total_tries: round,
+        hard_win: win ? 1 : 0,
+        hard_loss: win ? 0 : 1,
       });
     } else {
       const newCurrentStreak = win ? stats[0].current_streak + 1 : 0;
@@ -377,6 +379,8 @@ function WordleHard() {
           current_streak: newCurrentStreak,
           max_streak: newMaxStreak,
           total_tries: stats[0].total_tries + round,
+          hard_win: win ? stats[0].hard_win + 1 : stats[0].hard_win,
+          hard_loss: win ? stats[0].hard_loss : stats[0].hard_loss + 1,
         })
         .eq("user_id", user.id)
         .select("*");
